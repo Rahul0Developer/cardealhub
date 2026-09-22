@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Deal Hub - Find Your Perfect Car</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hero-section {
+            background-image: url('https://readdy.ai/api/search-image?query=luxury%20modern%20car%20with%20blurred%20background%2C%20premium%20automotive%20photography%2C%20high-end%20vehicle%20with%20sleek%20design%2C%20soft%20lighting%2C%20showroom%20quality%2C%20professional%20car%20photography%2C%20gradient%20background%20fading%20to%20light%20on%20the%20left%20side%20to%20allow%20text%20overlay%2C%20minimalist%20composition&width=1920&height=1080&seq=1&orientation=landscape');
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-overlay {
+            background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.5) 100%);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .checkmark {
+            height: 20px;
+            width: 20px;
+            background-color: #fff;
+            border: 2px solid #e5e7eb;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-checkbox input:checked ~ .checkmark {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        .checkmark:after {
+            content: "";
+            display: none;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #3b82f6;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        .price-range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="#" class="font-['Pacifico'] text-2xl text-primary">Car Deal Hub</a>
+            
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors">Marketplace</a>
+                <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors">Predict</a>
+                <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors">Trends</a>
+                <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors">List Car</a>
+                <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors">Contact Us</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors hidden md:block">Login</a>
+                <button class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap hidden md:block">Register</button>
+                
+                <div class="w-10 h-10 flex items-center justify-center cursor-pointer bg-gray-100 rounded-full">
+                    <i class="ri-sun-line text-gray-700"></i>
+                </div>
+                
+                <div class="md:hidden w-10 h-10 flex items-center justify-center cursor-pointer">
+                    <i class="ri-menu-line text-gray-700 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="pt-16">
+        <!-- Hero Section -->
+        <section class="hero-section relative">
+            <div class="hero-overlay w-full h-full absolute inset-0"></div>
+            <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+                <div class="max-w-2xl">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">Find Your Perfect Car</h1>
+                    <p class="text-lg text-gray-700 mb-8">Discover the best deals on premium cars. Browse thousands of verified listings with detailed information and fair price estimates.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="bg-primary text-white px-6 py-3 !rounded-button font-medium whitespace-nowrap">Browse Cars</button>
+                        <button class="bg-white text-primary border border-primary px-6 py-3 !rounded-button font-medium whitespace-nowrap">Predict Price</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="py-12 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 md:mb-0">Find Your Dream Car</h2>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 flex items-center justify-center cursor-pointer bg-gray-100 rounded-full">
+                                <i class="ri-layout-grid-line text-gray-700"></i>
+                            </div>
+                            <div class="w-8 h-8 flex items-center justify-center cursor-pointer">
+                                <i class="ri-list-check-2 text-gray-700"></i>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <select class="appearance-none bg-gray-100 text-gray-700 py-2 pl-4 pr-8 !rounded-button">
+                                <option>Sort by: Price</option>
+                                <option>Sort by: Year</option>
+                                <option>Sort by: Mileage</option>
+                            </select>
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                <i class="ri-arrow-down-s-line text-gray-700"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-6 mb-10">
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <div class="relative flex-grow">
+                            <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none w-5 h-5">
+                                <i class="ri-search-line text-gray-400"></i>
+                            </div>
+                            <input type="text" placeholder="Search by make, model, or keyword" class="w-full pl-10 pr-4 py-3 border-none rounded bg-white text-sm">
+                        </div>
+                        <button class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap">Search</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                            <div class="relative">
+                                <select class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                    <option>All Brands</option>
+                                    <option>Toyota</option>
+                                    <option>Honda</option>
+                                    <option>Mahindra</option>
+                                    <option>Hyundai</option>
+                                    <option>Tata</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                            <div class="relative">
+                                <select class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                    <option>All Years</option>
+                                    <option>2025</option>
+                                    <option>2024</option>
+                                    <option>2023</option>
+                                    <option>2022</option>
+                                    <option>2021</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fuel Type</label>
+                            <div class="relative">
+                                <select class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                    <option>All Types</option>
+                                    <option>Petrol</option>
+                                    <option>Diesel</option>
+                                    <option>Electric</option>
+                                    <option>Hybrid</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
+                            <input type="range" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer">
+                            <div class="price-range-labels text-xs text-gray-500">
+                                <span>₹5L</span>
+                                <span>₹50L</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button class="flex items-center text-primary text-sm font-medium">
+                            <span>Advanced Filters</span>
+                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                <i class="ri-arrow-down-s-line"></i>
+                            </div>
+                        </button>
+                        <span class="text-sm text-gray-500">Showing 24 of 156 cars</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Cars -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8">Featured Cars</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Car Card 1 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="relative h-48">
+                            <img src="https://readdy.ai/api/search-image?query=mahindra%20thar%20suv%2C%20front%20angle%20view%2C%20professional%20car%20photography%2C%20studio%20lighting%2C%20clean%20background%2C%20showroom%20quality%2C%20detailed%2C%20high%20resolution&width=600&height=400&seq=2&orientation=landscape" alt="Mahindra Thar" class="w-full h-full object-cover object-top">
+                            <div class="absolute top-3 right-3 bg-primary text-white text-xs font-medium px-2 py-1 rounded">Featured</div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-900">Mahindra Thar</h3>
+                                <span class="text-lg font-bold text-primary">₹16.3L</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span>2023 • 12,500 km • Diesel • Manual</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">4x4</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Convertible</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Off-road</span>
+                            </div>
+                            <button class="w-full bg-white text-primary border border-primary py-2 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Car Card 2 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="relative h-48">
+                            <img src="https://readdy.ai/api/search-image?query=toyota%20fortuner%20suv%2C%20front%20angle%20view%2C%20professional%20car%20photography%2C%20studio%20lighting%2C%20clean%20background%2C%20showroom%20quality%2C%20detailed%2C%20high%20resolution&width=600&height=400&seq=3&orientation=landscape" alt="Toyota Fortuner" class="w-full h-full object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-900">Toyota Fortuner</h3>
+                                <span class="text-lg font-bold text-primary">₹42.5L</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span>2024 • 5,200 km • Diesel • Automatic</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">7-Seater</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Sunroof</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">AWD</span>
+                            </div>
+                            <button class="w-full bg-white text-primary border border-primary py-2 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Car Card 3 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="relative h-48">
+                            <img src="https://readdy.ai/api/search-image?query=hyundai%20creta%20suv%2C%20front%20angle%20view%2C%20professional%20car%20photography%2C%20studio%20lighting%2C%20clean%20background%2C%20showroom%20quality%2C%20detailed%2C%20high%20resolution&width=600&height=400&seq=4&orientation=landscape" alt="Hyundai Creta" class="w-full h-full object-cover object-top">
+                            <div class="absolute top-3 right-3 bg-green-500 text-white text-xs font-medium px-2 py-1 rounded">New</div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-900">Hyundai Creta</h3>
+                                <span class="text-lg font-bold text-primary">₹18.2L</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span>2024 • 3,100 km • Petrol • Automatic</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Panoramic Roof</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">ADAS</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Turbo</span>
+                            </div>
+                            <button class="w-full bg-white text-primary border border-primary py-2 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Car Card 4 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="relative h-48">
+                            <img src="https://readdy.ai/api/search-image?query=tata%20nexon%20suv%2C%20front%20angle%20view%2C%20professional%20car%20photography%2C%20studio%20lighting%2C%20clean%20background%2C%20showroom%20quality%2C%20detailed%2C%20high%20resolution&width=600&height=400&seq=5&orientation=landscape" alt="Tata Nexon" class="w-full h-full object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-900">Tata Nexon</h3>
+                                <span class="text-lg font-bold text-primary">₹12.8L</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span>2023 • 8,700 km • Petrol • Manual</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">5-Star Safety</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Sunroof</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Connected Car</span>
+                            </div>
+                            <button class="w-full bg-white text-primary border border-primary py-2 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Car Card 5 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="relative h-48">
+                            <img src="https://readdy.ai/api/search-image?query=kia%20seltos%20suv%2C%20front%20angle%20view%2C%20professional%20car%20photography%2C%20studio%20lighting%2C%20clean%20background%2C%20showroom%20quality%2C%20detailed%2C%20high%20resolution&width=600&height=400&seq=6&orientation=landscape" alt="Kia Seltos" class="w-full h-full object-cover object-top">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-900">Kia Seltos</h3>
+                                <span class="text-lg font-bold text-primary">₹16.9L</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span>2023 • 9,300 km • Diesel • Automatic</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Ventilated Seats</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Bose Audio</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Turbo</span>
+                            </div>
+                            <button class="w-full bg-white text-primary border border-primary py-2 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Car Card 6 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="relative h-48">
+                            <img src="https://readdy.ai/api/search-image?query=mg%20hector%20suv%2C%20front%20angle%20view%2C%20professional%20car%20photography%2C%20studio%20lighting%2C%20clean%20background%2C%20showroom%20quality%2C%20detailed%2C%20high%20resolution&width=600&height=400&seq=7&orientation=landscape" alt="MG Hector" class="w-full h-full object-cover object-top">
+                            <div class="absolute top-3 right-3 bg-primary text-white text-xs font-medium px-2 py-1 rounded">Featured</div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-900">MG Hector</h3>
+                                <span class="text-lg font-bold text-primary">₹19.5L</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span>2023 • 11,200 km • Petrol • Automatic</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Panoramic Roof</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Voice Control</span>
+                                <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">Internet Inside</span>
+                            </div>
+                            <button class="w-full bg-white text-primary border border-primary py-2 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">View Details</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center mt-10">
+                    <button class="bg-white text-primary border border-primary px-6 py-3 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">Load More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Price Prediction Tool Preview -->
+        <section class="py-12 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center gap-10">
+                    <div class="w-full md:w-1/2">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Get an Accurate Price Estimate</h2>
+                        <p class="text-gray-700 mb-6">Our machine learning model analyzes thousands of car listings to provide you with the most accurate price prediction based on your car's specifications.</p>
+                        
+                        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                                    <div class="relative">
+                                        <select class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                            <option>Select Brand</option>
+                                            <option>Toyota</option>
+                                            <option>Honda</option>
+                                            <option>Mahindra</option>
+                                            <option>Hyundai</option>
+                                            <option>Tata</option>
+                                        </select>
+                                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                            <i class="ri-arrow-down-s-line text-gray-700"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                                    <div class="relative">
+                                        <select class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                            <option>Select Model</option>
+                                        </select>
+                                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                            <i class="ri-arrow-down-s-line text-gray-700"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                                    <div class="relative">
+                                        <select class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                            <option>Select Year</option>
+                                            <option>2025</option>
+                                            <option>2024</option>
+                                            <option>2023</option>
+                                            <option>2022</option>
+                                            <option>2021</option>
+                                        </select>
+                                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                            <i class="ri-arrow-down-s-line text-gray-700"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Mileage (km)</label>
+                                    <input type="text" placeholder="Enter mileage" class="w-full pl-4 pr-4 py-2 border-none rounded bg-white text-sm">
+                                </div>
+                            </div>
+                            
+                            <button class="w-full bg-primary text-white py-2 !rounded-button font-medium whitespace-nowrap">Get Price Estimate</button>
+                        </div>
+                        
+                        <button class="flex items-center text-primary font-medium">
+                            <span>Try our full prediction tool</span>
+                            <div class="w-5 h-5 flex items-center justify-center ml-1">
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <div class="w-full md:w-1/2">
+                        <div id="priceChart" class="w-full h-80 bg-white rounded-lg shadow-sm"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Price Trends -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Price Trends</h2>
+                        <p class="text-gray-600">Stay updated with the latest market trends</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <div class="inline-flex bg-white rounded-full p-1 shadow-sm">
+                            <button class="px-4 py-1 rounded-full bg-primary text-white text-sm font-medium whitespace-nowrap">Monthly</button>
+                            <button class="px-4 py-1 rounded-full text-gray-700 text-sm font-medium whitespace-nowrap">Quarterly</button>
+                            <button class="px-4 py-1 rounded-full text-gray-700 text-sm font-medium whitespace-nowrap">Yearly</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">SUV Market</h3>
+                            <div class="flex items-center text-green-500 font-medium">
+                                <div class="w-4 h-4 flex items-center justify-center mr-1">
+                                    <i class="ri-arrow-up-line"></i>
+                                </div>
+                                <span>8.2%</span>
+                            </div>
+                        </div>
+                        <div id="suvChart" class="w-full h-40"></div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Sedan Market</h3>
+                            <div class="flex items-center text-red-500 font-medium">
+                                <div class="w-4 h-4 flex items-center justify-center mr-1">
+                                    <i class="ri-arrow-down-line"></i>
+                                </div>
+                                <span>3.5%</span>
+                            </div>
+                        </div>
+                        <div id="sedanChart" class="w-full h-40"></div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Electric Vehicles</h3>
+                            <div class="flex items-center text-green-500 font-medium">
+                                <div class="w-4 h-4 flex items-center justify-center mr-1">
+                                    <i class="ri-arrow-up-line"></i>
+                                </div>
+                                <span>15.7%</span>
+                            </div>
+                        </div>
+                        <div id="evChart" class="w-full h-40"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2 md:mb-0">Brand Comparison</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="custom-checkbox flex items-center">
+                                <input type="checkbox" checked>
+                                <span class="checkmark mr-2"></span>
+                                <span class="text-sm">Toyota</span>
+                            </label>
+                            <label class="custom-checkbox flex items-center">
+                                <input type="checkbox" checked>
+                                <span class="checkmark mr-2"></span>
+                                <span class="text-sm">Hyundai</span>
+                            </label>
+                            <label class="custom-checkbox flex items-center">
+                                <input type="checkbox" checked>
+                                <span class="checkmark mr-2"></span>
+                                <span class="text-sm">Mahindra</span>
+                            </label>
+                            <label class="custom-checkbox flex items-center">
+                                <input type="checkbox">
+                                <span class="checkmark mr-2"></span>
+                                <span class="text-sm">Tata</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="brandComparisonChart" class="w-full h-80"></div>
+                </div>
+                
+                <div class="flex justify-center mt-8">
+                    <button class="bg-white text-primary border border-primary px-6 py-3 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">View Full Analysis</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-16 bg-primary bg-opacity-5">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Ready to Find Your Dream Car?</h2>
+                    <p class="text-lg text-gray-700 mb-8">Join thousands of satisfied customers who found their perfect car through Car Deal Hub.</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="bg-primary text-white px-8 py-3 !rounded-button font-medium whitespace-nowrap">Register Now</button>
+                        <button class="bg-white text-primary border border-primary px-8 py-3 !rounded-button font-medium whitespace-nowrap">Browse Cars</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <a href="#" class="font-['Pacifico'] text-2xl text-white mb-4 inline-block">Car Deal Hub</a>
+                    <p class="text-gray-400 mb-4">Your trusted platform for buying and selling cars in India. Based in Delhi, serving nationwide since 2020.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
+                            <i class="ri-facebook-fill text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
+                            <i class="ri-twitter-x-fill text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
+                            <i class="ri-instagram-fill text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
+                            <i class="ri-linkedin-fill text-white"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Marketplace</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Price Prediction</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Price Trends</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3 mt-1">
+                                <i class="ri-map-pin-line text-primary"></i>
+                            </div>
+                            <span class="text-gray-400">123 Connaught Place, New Delhi, India - 110001</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-phone-line text-primary"></i>
+                            </div>
+                            <span class="text-gray-400">+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3">
+                                <i class="ri-mail-line text-primary"></i>
+                            </div>
+                            <span class="text-gray-400">support@cardealhub.com</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-6">
+                        <h4 class="text-sm font-semibold mb-3">Subscribe to our newsletter</h4>
+                        <div class="flex">
+                            <input type="email" placeholder="Your email" class="flex-grow pl-4 pr-4 py-2 bg-gray-800 border-none rounded-l text-white text-sm">
+                            <button class="bg-primary text-white px-4 py-2 !rounded-r-button !rounded-l-none whitespace-nowrap">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2025 Car Deal Hub. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">Terms of Service</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Price Prediction Chart
+            const priceChart = echarts.init(document.getElementById('priceChart'));
+            const priceOption = {
+                animation: false,
+                grid: {
+                    top: 40,
+                    right: 20,
+                    bottom: 40,
+                    left: 60
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#e5e7eb',
+                    textStyle: {
+                        color: '#1f2937'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#e5e7eb'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#1f2937'
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Price (₹ Lakhs)',
+                    nameTextStyle: {
+                        color: '#1f2937'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#e5e7eb'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        formatter: '{value}L'
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#f3f4f6'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: 'Market Average',
+                        type: 'line',
+                        data: [16.5, 17.2, 18.8, 20.5, 22.3, 23.8],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            color: 'rgba(87, 181, 231, 1)'
+                        },
+                        symbol: 'none',
+                        areaStyle: {
+                            color: {
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 0,
+                                y2: 1,
+                                colorStops: [{
+                                    offset: 0,
+                                    color: 'rgba(87, 181, 231, 0.2)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgba(87, 181, 231, 0.05)'
+                                }]
+                            }
+                        }
+                    },
+                    {
+                        name: 'Predicted Value',
+                        type: 'line',
+                        data: [null, null, null, null, null, 25.2],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            color: 'rgba(252, 141, 98, 1)',
+                            type: 'dashed'
+                        },
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        itemStyle: {
+                            color: 'rgba(252, 141, 98, 1)'
+                        }
+                    }
+                ]
+            };
+            priceChart.setOption(priceOption);
+
+            // SUV Chart
+            const suvChart = echarts.init(document.getElementById('suvChart'));
+            const suvOption = {
+                animation: false,
+                grid: {
+                    top: 10,
+                    right: 10,
+                    bottom: 20,
+                    left: 40
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        fontSize: 10
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        fontSize: 10
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#f3f4f6'
+                        }
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#e5e7eb'
+                },
+                series: [{
+                    data: [18, 19, 20, 22, 23, 25],
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: {
+                        color: 'rgba(87, 181, 231, 1)',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0,
+                                color: 'rgba(87, 181, 231, 0.2)'
+                            }, {
+                                offset: 1,
+                                color: 'rgba(87, 181, 231, 0.05)'
+                            }]
+                        }
+                    }
+                }]
+            };
+            suvChart.setOption(suvOption);
+            // Sedan Chart
+            const sedanChart = echarts.init(document.getElementById('sedanChart'));
+            const sedanOption = {
+                animation: false,
+                grid: {
+                    top: 10,
+                    right: 10,
+                    bottom: 20,
+                    left: 40
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        fontSize: 10
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        fontSize: 10
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#f3f4f6'
+                        }
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#e5e7eb'
+                },
+                series: [{
+                    data: [15, 14, 13.5, 13, 12.2, 11.8],
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: {
+                        color: 'rgba(252, 141, 98, 1)',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0,
+                                color: 'rgba(252, 141, 98, 0.2)'
+                            }, {
+                                offset: 1,
+                                color: 'rgba(252, 141, 98, 0.05)'
+                            }]
+                        }
+                    }
+                }]
+            };
+            sedanChart.setOption(sedanOption);
+
+            // EV Chart
+            const evChart = echarts.init(document.getElementById('evChart'));
+            const evOption = {
+                animation: false,
+                grid: {
+                    top: 10,
+                    right: 10,
+                    bottom: 20,
+                    left: 40
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        fontSize: 10
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        fontSize: 10
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#f3f4f6'
+                        }
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#e5e7eb'
+                },
+                series: [{
+                    data: [8, 9.5, 11, 12.5, 14, 16],
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: {
+                        color: 'rgba(141, 211, 199, 1)',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0,
+                                color: 'rgba(141, 211, 199, 0.2)'
+                            }, {
+                                offset: 1,
+                                color: 'rgba(141, 211, 199, 0.05)'
+                            }]
+                        }
+                    }
+                }]
+            };
+            evChart.setOption(evOption);
+            // Brand Comparison Chart
+            const brandComparisonChart = echarts.init(document.getElementById('brandComparisonChart'));
+            const brandComparisonOption = {
+                animation: false,
+                grid: {
+                    top: 40,
+                    right: 20,
+                    bottom: 40,
+                    left: 60
+                },
+                legend: {
+                    data: ['Toyota', 'Hyundai', 'Mahindra'],
+                    bottom: 10,
+                    textStyle: {
+                        color: '#1f2937'
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#e5e7eb',
+                    textStyle: {
+                        color: '#1f2937'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#e5e7eb'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#1f2937'
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Price (₹ Lakhs)',
+                    nameTextStyle: {
+                        color: '#1f2937'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#e5e7eb'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#1f2937',
+                        formatter: '{value}L'
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#f3f4f6'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: 'Toyota',
+                        type: 'line',
+                        data: [22, 22.5, 23, 23.8, 24.5, 25],
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 6,
+                        lineStyle: {
+                            width: 3,
+                            color: 'rgba(87, 181, 231, 1)'
+                        },
+                        itemStyle: {
+                            color: 'rgba(87, 181, 231, 1)'
+                        }
+                    },
+                    {
+                        name: 'Hyundai',
+                        type: 'line',
+                        data: [18, 18.5, 19, 19.2, 19.8, 20.5],
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 6,
+                        lineStyle: {
+                            width: 3,
+                            color: 'rgba(141, 211, 199, 1)'
+                        },
+                        itemStyle: {
+                            color: 'rgba(141, 211, 199, 1)'
+                        }
+                    },
+                    {
+                        name: 'Mahindra',
+                        type: 'line',
+                        data: [16, 16.8, 17.5, 18.2, 19, 19.5],
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 6,
+                        lineStyle: {
+                            width: 3,
+                            color: 'rgba(251, 191, 114, 1)'
+                        },
+                        itemStyle: {
+                            color: 'rgba(251, 191, 114, 1)'
+                        }
+                    }
+                ]
+            };
+            brandComparisonChart.setOption(brandComparisonOption);
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                priceChart.resize();
+                suvChart.resize();
+                sedanChart.resize();
+                evChart.resize();
+                brandComparisonChart.resize();
+            });
+        });
+
+        // Custom checkbox functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.custom-checkbox input');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    // Here you would update the chart based on selected brands
+                    // For this demo, we're just logging the change
+                    console.log('Checkbox changed:', this.nextElementSibling.nextElementSibling.textContent, 'Checked:', this.checked);
+                });
+            });
+        });
+
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.querySelector('.ri-sun-line').parentElement;
+            themeToggle.addEventListener('click', function() {
+                // Toggle between sun and moon icons
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('ri-sun-line')) {
+                    icon.classList.remove('ri-sun-line');
+                    icon.classList.add('ri-moon-line');
+                } else {
+                    icon.classList.remove('ri-moon-line');
+                    icon.classList.add('ri-sun-line');
+                }
+                
+                // Here you would implement actual theme switching
+                // For this demo, we're just logging the change
+                console.log('Theme toggled');
+            });
+        });
+    </script>
+</body>
+</html>

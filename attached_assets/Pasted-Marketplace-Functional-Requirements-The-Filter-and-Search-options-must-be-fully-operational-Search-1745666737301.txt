@@ -1,0 +1,129 @@
+Marketplace Functional Requirements
+The Filter and Search options must be fully operational:
+
+Search cars by Brand, Model, Year, Fuel Type, Transmission, City, Price Range, KM Driven.
+
+Combine multiple filters (e.g., "Hyundai + Diesel + Mumbai + ₹5–10 Lakhs").
+
+Filters must dynamically update listings without page reloads (AJAX or smooth UI refresh).
+
+The Buy Now Button must be fully functional:
+
+Clicking "Buy Now" triggers the transaction flow:
+
+Redirect user to payment initiation.
+
+Confirm purchase after successful payment.
+
+Update car status to "Sold" and hide from marketplace.
+
+Handle edge cases: Car already sold, payment failed, user not logged in.
+
+Zero Dead Links Rule:
+
+No page, button, or link should be non-functional.
+
+Every action must provide valid navigation, feedback, or UI response.
+
+404 and 500 error placeholders must be replaced with real pages (e.g., No Cars Available, Payment Error).
+
+🧑‍💻 User Dashboard (Buyer/Seller) Requirements
+🔹 Common Features for All Users (Post Login)
+
+Welcome Message:
+"Hi, [Name]! Here's your latest activity on CarDealHub."
+
+Profile Summary:
+
+Name, Email, User Role (Buyer/Seller)
+
+Option to edit personal details.
+
+Notification Center:
+
+Alerts for:
+
+Listing approvals or rejections
+
+New buyer inquiries
+
+Admin messages
+
+Quick Access Buttons:
+
+List a New Car
+
+Browse Marketplace
+
+Predict Your Car’s Price
+
+🛒 Buyer-Specific Dashboard Features
+Saved Listings:
+
+View/manage wishlisted cars.
+
+Remove listings from saved list.
+
+Purchase History:
+
+View all cars purchased.
+
+Access receipts and transaction status.
+
+Car Match Recommendations:
+
+AI-suggested listings based on browsing/budget history.
+
+"Recommended for You" section on dashboard.
+
+Prediction History:
+
+Review all past car price predictions.
+
+Recently Viewed Cars:
+
+Auto-saved recent browsing activity for quick revisit.
+
+🏷️ Seller-Specific Dashboard Features
+My Listings:
+
+View all personal car listings.
+
+See status: Active, Pending, Sold.
+
+Add New Listing:
+
+Quick-access form to create new listings (including image upload).
+
+Edit or Delete Listings:
+
+Modify car details or remove inactive listings easily.
+
+Listing Insights:
+
+See the number of:
+
+Views on each car
+
+Inquiries received
+
+Days listed without sale
+
+Messages/Buyer Inquiries:
+
+View and respond to direct messages from potential buyers.
+
+Boost Listing Suggestions:
+
+Tips and prompts like:
+"Upload a 360° view image to attract 30% more buyers."
+"Price slightly below market average for quicker sale."
+
+✅ Mandatory Development Guidelines
+
+Area	Condition
+Marketplace Filters/Search	Must dynamically and accurately update car listings
+Buy Now Button	Must trigger payment process and status update
+Dead Links/Buttons	No broken links, all navigation must be active
+Dashboard Access	Strictly after authentication only (buyer/seller role check)
+Smooth UI/UX	Instant updates, minimal page reloads, clear success/failure feedback

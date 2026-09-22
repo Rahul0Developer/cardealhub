@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Dashboard Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">My Dashboard</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Welcome back, {{ user.username }}! Manage your listings, track predictions, and more.</p>
+        </div>
+    </section>
+    
+    <!-- Stats Overview -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-car-line text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ cars_count }}</h3>
+                    <p class="text-gray-600">Listed Cars</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-line-chart-line text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ predictions_count }}</h3>
+                    <p class="text-gray-600">Price Predictions</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-heart-line text-red-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ liked_cars_count }}</h3>
+                    <p class="text-gray-600">Liked Cars</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <a href="{{ url_for('transaction.transactions_history') }}" class="block hover:opacity-90 transition-opacity">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ri-exchange-dollar-line text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ transactions_count|default(0) }}</h3>
+                        <p class="text-gray-600">Transactions</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Recent Activity -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Recent Car Listings -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">Your Recent Listings</h3>
+                        <a href="{{ url_for('user.my_listings') }}" class="text-primary font-medium text-sm hover:underline">View All</a>
+                    </div>
+                    
+                    {% if recent_cars %}
+                        <div class="space-y-4">
+                            {% for car in recent_cars %}
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-md flex items-center justify-center mr-4">
+                                        {% if car.image_path %}
+                                            <img src="{{ url_for('static', filename='images/cars/' + car.image_path) }}" alt="{{ car.name }}" class="w-12 h-12 object-cover rounded-md">
+                                        {% else %}
+                                            <i class="ri-car-line text-gray-400 text-xl"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-medium text-gray-900">{{ car.name }}</h4>
+                                        <p class="text-sm text-gray-600">{{ car.company }}, {{ car.year }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-gray-900">₹{{ "{:,}".format(car.price) }}</p>
+                                        <p class="text-xs text-gray-500">{{ car.created_at.strftime('%d %b %Y') }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500 py-4 text-center">You haven't listed any cars yet.</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('list_car') }}" class="inline-block bg-primary text-white py-2 px-4 rounded-md font-medium hover:bg-primary-dark transition-colors">List a Car</a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Recent Price Predictions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">Recent Price Predictions</h3>
+                        <a href="{{ url_for('user.prediction_history') }}" class="text-primary font-medium text-sm hover:underline">View All</a>
+                    </div>
+                    
+                    {% if recent_predictions %}
+                        <div class="space-y-4">
+                            {% for prediction in recent_predictions %}
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-12 h-12 bg-green-100 rounded-md flex items-center justify-center mr-4">
+                                        <i class="ri-line-chart-line text-green-600 text-xl"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-medium text-gray-900">{{ prediction.company }} {{ prediction.name }}</h4>
+                                        <p class="text-sm text-gray-600">{{ prediction.year }}, {{ prediction.kms_driven }} km</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-gray-900">₹{{ "{:,}".format(prediction.predicted_price) }}</p>
+                                        <p class="text-xs text-gray-500">{{ prediction.created_at.strftime('%d %b %Y') }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500 py-4 text-center">You haven't made any price predictions yet.</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('predict') }}" class="inline-block bg-primary text-white py-2 px-4 rounded-md font-medium hover:bg-primary-dark transition-colors">Try Prediction</a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Recent Transactions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">Recent Transactions</h3>
+                        <a href="{{ url_for('transaction.transactions_history') }}" class="text-primary font-medium text-sm hover:underline">View All</a>
+                    </div>
+                    
+                    {% if recent_transactions %}
+                        <div class="space-y-4">
+                            {% for transaction in recent_transactions %}
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-md flex items-center justify-center mr-4">
+                                        <i class="ri-exchange-dollar-line text-purple-600 text-xl"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-medium text-gray-900">
+                                            {% if transaction.buyer_id == current_user.id %}
+                                                Purchase
+                                            {% else %}
+                                                Sale
+                                            {% endif %}
+                                        </h4>
+                                        <p class="text-sm text-gray-600">{{ transaction.car.name }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-gray-900">₹{{ "{:,}".format(transaction.amount|int) }}</p>
+                                        <p class="text-xs 
+                                            {% if transaction.status == 'Success' %}text-green-500
+                                            {% elif transaction.status == 'Failed' %}text-red-500
+                                            {% else %}text-yellow-500{% endif %}">
+                                            {{ transaction.status }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500 py-4 text-center">You don't have any transactions yet.</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('marketplace') }}" class="inline-block bg-primary text-white py-2 px-4 rounded-md font-medium hover:bg-primary-dark transition-colors">Browse Cars</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Your Car Status -->
+    {% if car_status %}
+        <section class="py-8">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Your Car Listings Status</h2>
+                
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Car</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Likes</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Listed</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for car, likes_count in car_status %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 bg-gray-200 rounded-md flex-shrink-0 mr-4">
+                                                {% if car.image_path %}
+                                                    <img src="{{ url_for('static', filename='images/cars/' + car.image_path) }}" alt="{{ car.name }}" class="h-10 w-10 object-cover rounded-md">
+                                                {% else %}
+                                                    <div class="h-10 w-10 flex items-center justify-center">
+                                                        <i class="ri-car-line text-gray-400"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">{{ car.name }}</div>
+                                                <div class="text-sm text-gray-500">{{ car.company }}, {{ car.year }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">₹{{ "{:,}".format(car.price) }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="ri-heart-fill text-red-500 mr-1"></i>
+                                            <span class="text-sm text-gray-900">{{ likes_count }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ car.created_at.strftime('%d %b %Y') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {% if car.status and car.status.is_approved %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Approved</span>
+                                        {% elif car.status and car.status.is_approved is sameas false %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Rejected</span>
+                                        {% else %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    <!-- Quick Actions -->
+    <section class="py-8 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <a href="{{ url_for('list_car') }}" class="bg-white rounded-lg shadow-sm p-6 text-center hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-add-line text-primary text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">List a Car</h3>
+                    <p class="text-gray-600 text-sm">Add a new car to sell</p>
+                </a>
+                
+                <a href="{{ url_for('predict') }}" class="bg-white rounded-lg shadow-sm p-6 text-center hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-line-chart-line text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Predict Price</h3>
+                    <p class="text-gray-600 text-sm">Get car value estimate</p>
+                </a>
+                
+                <a href="{{ url_for('marketplace') }}" class="bg-white rounded-lg shadow-sm p-6 text-center hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-store-line text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Marketplace</h3>
+                    <p class="text-gray-600 text-sm">Browse available cars</p>
+                </a>
+                
+                <a href="{{ url_for('transaction.transactions_history') }}" class="bg-white rounded-lg shadow-sm p-6 text-center hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-exchange-dollar-line text-indigo-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Transactions</h3>
+                    <p class="text-gray-600 text-sm">View your purchases & sales</p>
+                </a>
+                
+                <a href="{{ url_for('user.profile') }}" class="bg-white rounded-lg shadow-sm p-6 text-center hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-user-settings-line text-yellow-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Account</h3>
+                    <p class="text-gray-600 text-sm">Update your profile</p>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

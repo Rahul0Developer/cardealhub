@@ -1,0 +1,203 @@
+/* Additional styles to complement the existing Tailwind CSS */
+
+/* Fix for page content to account for fixed header */
+body {
+    padding-top: 64px; /* Adjust based on header height */
+}
+
+/* Dark mode styles */
+.dark body {
+    background-color: #121212;
+    color: #e5e7eb;
+}
+
+.dark header {
+    background-color: #1f2937 !important;
+    border-bottom: 1px solid #374151;
+}
+
+.dark .bg-white,
+.dark .bg-gray-50 {
+    background-color: #1f2937 !important;
+}
+
+.dark .bg-gray-100,
+.dark .bg-gray-200 {
+    background-color: #374151 !important;
+}
+
+.dark .text-gray-700,
+.dark .text-gray-900 {
+    color: #e5e7eb !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-600,
+.dark .text-gray-400 {
+    color: #9ca3af !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200 {
+    border-color: #374151 !important;
+}
+
+.dark .shadow-sm,
+.dark .shadow-md {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+    background-color: #374151 !important;
+    color: #e5e7eb !important;
+    border-color: #4b5563 !important;
+}
+
+.dark .car-card {
+    background-color: #1f2937 !important;
+}
+
+/* Custom transitions */
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* Form feedback styles */
+.form-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-success {
+    color: #10b981;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Card hover effect */
+.car-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.car-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Chart containers */
+.chart-container {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 2rem;
+}
+
+/* Prediction result animation */
+.prediction-result {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Flash messages */
+.flash-message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.flash-message.success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    color: #10b981;
+}
+
+.flash-message.error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Car image carousel */
+.car-image-carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.car-image-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.car-image-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.car-image-container.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.car-nav-prev,
+.car-nav-next {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.car-image-carousel:hover .car-nav-prev,
+.car-image-carousel:hover .car-nav-next {
+    opacity: 1;
+}
+
+.car-nav-dot {
+    transition: all 0.3s ease;
+}
+
+.car-nav-dot.dot-active {
+    transform: scale(1.3);
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 300px;
+    }
+}

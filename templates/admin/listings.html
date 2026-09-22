@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Listings - Admin Panel{% endblock %}
+
+{% block content %}
+    <!-- Admin Dashboard Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Manage Car Listings</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Review, approve, and manage all car listings on the platform.</p>
+        </div>
+    </section>
+    
+    <!-- Admin Nav -->
+    <section class="py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <nav class="flex overflow-x-auto whitespace-nowrap pb-2">
+                <a href="{{ url_for('admin.dashboard') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Dashboard</a>
+                <a href="{{ url_for('admin.listings') }}" class="px-4 py-2 font-medium text-primary border-b-2 border-primary mr-4">Listings</a>
+                <a href="{{ url_for('admin.users') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Users</a>
+                <a href="{{ url_for('admin.reports') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary">Reports</a>
+            </nav>
+        </div>
+    </section>
+    
+    <!-- Filter Controls -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Filter Listings</h3>
+                
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="{{ url_for('admin.listings', status='all') }}" class="px-4 py-2 rounded-full {{ 'bg-primary text-white' if status_filter == 'all' else 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                        All Listings
+                    </a>
+                    <a href="{{ url_for('admin.listings', status='pending') }}" class="px-4 py-2 rounded-full {{ 'bg-primary text-white' if status_filter == 'pending' else 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                        Pending Approval
+                    </a>
+                    <a href="{{ url_for('admin.listings', status='approved') }}" class="px-4 py-2 rounded-full {{ 'bg-primary text-white' if status_filter == 'approved' else 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                        Approved
+                    </a>
+                    <a href="{{ url_for('admin.listings', status='featured') }}" class="px-4 py-2 rounded-full {{ 'bg-primary text-white' if status_filter == 'featured' else 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                        Featured
+                    </a>
+                    <a href="{{ url_for('admin.listings', status='sold') }}" class="px-4 py-2 rounded-full {{ 'bg-primary text-white' if status_filter == 'sold' else 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                        Sold
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Listings Table -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Car</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for car, status in pagination.items %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 bg-gray-200 rounded-md flex-shrink-0 mr-4">
+                                                {% if car.image_path %}
+                                                    <img src="{{ url_for('static', filename='images/cars/' + car.image_path) }}" alt="{{ car.name }}" class="h-10 w-10 object-cover rounded-md">
+                                                {% else %}
+                                                    <div class="h-10 w-10 flex items-center justify-center">
+                                                        <i class="ri-car-line text-gray-400"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">{{ car.name }}</div>
+                                                <div class="text-sm text-gray-500">{{ car.company }}, {{ car.year }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">₹{{ "{:,}".format(car.price) }}</div>
+                                        <div class="text-xs text-gray-500">{{ car.kms_driven }} km</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ car.owner.username }}</div>
+                                        <div class="text-xs text-gray-500">Listed {{ car.created_at.strftime('%d %b %Y') }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {% if status and status.is_approved %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Approved</span>
+                                        {% elif status and status.is_approved is sameas false %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Rejected</span>
+                                        {% else %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                        {% endif %}
+                                        
+                                        {% if status and status.is_featured %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 ml-1">Featured</span>
+                                        {% endif %}
+                                        
+                                        {% if status and status.is_sold %}
+                                            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800 ml-1">Sold</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex space-x-2">
+                                            <button type="button" onclick="openActionModal('{{ car.id }}')" class="px-3 py-1 bg-primary text-white rounded-full text-xs font-medium hover:bg-primary-dark transition-colors">Actions</button>
+                                            <button type="button" onclick="openDeleteModal('{{ car.id }}', '{{ car.name }}')" class="px-3 py-1 bg-red-600 text-white rounded-full text-xs font-medium hover:bg-red-700 transition-colors">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if pagination.items %}
+                    <!-- Pagination -->
+                    <div class="px-6 py-4 bg-white border-t border-gray-200">
+                        <nav class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700">
+                                    Showing <span class="font-medium">{{ pagination.items|length }}</span> of <span class="font-medium">{{ pagination.total }}</span> listings
+                                </p>
+                            </div>
+                            <div class="flex space-x-2">
+                                {% if pagination.has_prev %}
+                                    <a href="{{ url_for('admin.listings', status=status_filter, page=pagination.prev_num) }}" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 transition-colors">Previous</a>
+                                {% endif %}
+                                
+                                {% if pagination.has_next %}
+                                    <a href="{{ url_for('admin.listings', status=status_filter, page=pagination.next_num) }}" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 transition-colors">Next</a>
+                                {% endif %}
+                            </div>
+                        </nav>
+                    </div>
+                {% else %}
+                    <div class="px-6 py-12 text-center">
+                        <p class="text-gray-500 mb-4">No car listings found matching the selected criteria.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    
+    <!-- Action Modal -->
+    <div id="actionModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900">Listing Actions</h3>
+                <button type="button" onclick="closeActionModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="ri-close-line text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="actionForm" action="" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-4">
+                    <label for="admin_notes" class="block text-sm font-medium text-gray-700 mb-1">Admin Notes</label>
+                    <textarea id="admin_notes" name="notes" rows="3" class="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <button type="submit" name="action" value="approve" class="w-full py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">Approve</button>
+                    <button type="submit" name="action" value="reject" class="w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">Reject</button>
+                    <button type="submit" name="action" value="feature" class="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Feature</button>
+                    <button type="submit" name="action" value="unfeature" class="w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Unfeature</button>
+                    <button type="submit" name="action" value="sold" class="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">Mark as Sold</button>
+                    <button type="submit" name="action" value="unsold" class="w-full py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition-colors">Mark as Available</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900">Confirm Deletion</h3>
+                <button type="button" onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="ri-close-line text-xl"></i>
+                </button>
+            </div>
+            
+            <p class="mb-6 text-gray-700">Are you sure you want to delete <span id="deleteCarName" class="font-medium"></span>? This action cannot be undone.</p>
+            
+            <div class="flex gap-4">
+                <button type="button" onclick="closeDeleteModal()" class="w-1/2 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">Cancel</button>
+                <form id="deleteForm" action="" method="post" class="w-1/2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openActionModal(carId) {
+        document.getElementById('actionForm').action = "{{ url_for('admin.update_listing_status', car_id=0) }}".replace('0', carId);
+        document.getElementById('actionModal').classList.remove('hidden');
+    }
+    
+    function closeActionModal() {
+        document.getElementById('actionModal').classList.add('hidden');
+    }
+    
+    function openDeleteModal(carId, carName) {
+        document.getElementById('deleteForm').action = "{{ url_for('admin.delete_listing', car_id=0) }}".replace('0', carId);
+        document.getElementById('deleteCarName').textContent = carName;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+    
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        const actionModal = document.getElementById('actionModal');
+        const deleteModal = document.getElementById('deleteModal');
+        
+        if (event.target === actionModal) {
+            closeActionModal();
+        }
+        
+        if (event.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+</script>
+{% endblock %}

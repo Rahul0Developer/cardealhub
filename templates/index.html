@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero-section relative">
+        <div class="hero-overlay w-full h-full absolute inset-0"></div>
+        <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+            <div class="max-w-2xl">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">Find Your Perfect Car</h1>
+                <p class="text-lg text-gray-700 mb-8">Discover the best deals on premium cars. Browse thousands of verified listings with detailed information and fair price estimates.</p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="/marketplace" class="bg-primary text-white px-6 py-3 !rounded-button font-medium whitespace-nowrap inline-block">Browse Cars</a>
+                    <a href="/predict" class="bg-white text-primary border border-primary px-6 py-3 !rounded-button font-medium whitespace-nowrap inline-block">Predict Price</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose Car Deal Hub?</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">We provide comprehensive tools and data to help you make the best decision when buying or selling a car.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 rounded-lg p-6 text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-price-tag-3-line text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Price Prediction</h3>
+                    <p class="text-gray-600">Get accurate price estimates for any car based on its specifications, condition, and market trends.</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6 text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-line-chart-line text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Market Insights</h3>
+                    <p class="text-gray-600">Stay informed with the latest market trends, price fluctuations, and demand patterns for different car models.</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6 text-center">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-shield-check-line text-yellow-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Verified Listings</h3>
+                    <p class="text-gray-600">Browse through verified car listings with detailed information and transparent pricing to find your perfect match.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Brands Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Popular Brands</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Explore cars from the most popular brands in the market.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                {% for brand, count in popular_brands.items() %}
+                <a href="/marketplace?brand={{ brand }}" class="bg-white rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="font-bold text-xl mb-2">{{ brand }}</div>
+                    <p class="text-gray-500 text-sm">{{ count }} cars</p>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Cars Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Trending Cars</h2>
+                <a href="/marketplace" class="text-primary hover:underline font-medium">View All</a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% if trending_cars %}
+                    {% for car in trending_cars %}
+                    <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow car-card">
+                        <div class="h-48 bg-gray-200 relative overflow-hidden">
+                            {% if car.image_path %}
+                            <img src="{% if car.image_path.startswith('static/') %}{{ car.image_path }}{% else %}{{ url_for('static', filename='images/cars/' + car.image_path) }}{% endif %}" 
+                            alt="{{ car.name }}" 
+                                     class="w-full h-full object-cover">
+                            {% else %}
+                                {% set default_image = car.company.lower() + '_default.jpg' %}
+                                <img src="{{ url_for('static', filename='images/cars/' + default_image) }}" 
+                                     alt="{{ car.name }}" 
+                                     class="w-full h-full object-cover"
+                                     onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/cars/maruti_default.jpg') }}'; 
+                                             this.onerror=function(){this.onerror=null; this.parentNode.innerHTML='<div class=\'absolute inset-0 flex items-center justify-center\'><span class=\'text-5xl font-bold text-gray-400\'>{{ car.company[0] }}</span></div>';}">
+                            {% endif %}
+                            {% if car.fuel_type %}
+                            <div class="absolute top-4 right-4 bg-primary text-white text-xs px-2 py-1 rounded">{{ car.fuel_type }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ car.name }}</h3>
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="text-2xl font-bold text-primary">₹{{ "{:,}".format(car.price) }}</div>
+                                <div class="text-gray-500">{{ car.year }}</div>
+                            </div>
+                            <div class="flex justify-between mb-6">
+                                <div class="flex items-center text-gray-500">
+                                    <i class="ri-dashboard-3-line mr-1"></i>
+                                    <span>{{ "{:,}".format(car.kms_driven) }} km</span>
+                                </div>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="ri-gas-station-line mr-1"></i>
+                                    <span>{{ car.fuel_type }}</span>
+                                </div>
+                            </div>
+                            <a href="/marketplace" class="block text-center bg-primary text-white py-2 rounded-button font-medium">View Details</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-span-3 text-center py-12">
+                        <p class="text-gray-500">No trending cars available at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Simple steps to find your dream car or sell your car at the best price.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="relative">
+                    <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold mb-6 mx-auto">1</div>
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Search or List</h3>
+                        <p class="text-gray-600">Browse through thousands of verified car listings or list your car for sale.</p>
+                    </div>
+                    <div class="hidden md:block absolute top-6 right-0 transform translate-x-1/2">
+                        <svg width="120" height="20" viewBox="0 0 120 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M120 10L100 0.857864V19.1421L120 10ZM0 11.5H101.5V8.5H0V11.5Z" fill="#E5E7EB"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold mb-6 mx-auto">2</div>
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Check Market Value</h3>
+                        <p class="text-gray-600">Use our price prediction tool to get an estimate of the car's market value.</p>
+                    </div>
+                    <div class="hidden md:block absolute top-6 right-0 transform translate-x-1/2">
+                        <svg width="120" height="20" viewBox="0 0 120 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M120 10L100 0.857864V19.1421L120 10ZM0 11.5H101.5V8.5H0V11.5Z" fill="#E5E7EB"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold mb-6 mx-auto">3</div>
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Connect & Deal</h3>
+                        <p class="text-gray-600">Connect with sellers or buyers directly and make a great deal.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="py-20 bg-primary">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to Find Your Dream Car?</h2>
+            <p class="text-white opacity-90 max-w-2xl mx-auto mb-8">Join thousands of satisfied customers who found their perfect car at the right price.</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/marketplace" class="bg-white text-primary px-6 py-3 !rounded-button font-medium">Browse Cars</a>
+                <a href="/predict" class="bg-transparent text-white border border-white px-6 py-3 !rounded-button font-medium">Predict Price</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

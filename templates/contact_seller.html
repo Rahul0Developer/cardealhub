@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Seller - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Contact Header -->
+    <section class="bg-white dark:bg-gray-800 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Contact Seller</h1>
+            <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Send a message to the seller about {{ car.name }} ({{ car.year }}).</p>
+        </div>
+    </section>
+    
+    <!-- Contact Content -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Car Information -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 md:p-8">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Car Details</h2>
+                        
+                        <div class="h-48 bg-gray-200 dark:bg-gray-700 relative rounded-lg mb-6">
+                            {% if car.image_path %}
+                                <img src="{{ url_for('static', filename='images/cars/' + car.image_path) }}" 
+                                    alt="{{ car.name }}" 
+                                    class="w-full h-full object-cover rounded-lg">
+                            {% else %}
+                                {% set default_image = car.company.lower() + '_default.jpg' %}
+                                <img src="{{ url_for('static', filename='images/cars/' + default_image) }}" 
+                                    alt="{{ car.name }}" 
+                                    class="w-full h-full object-cover rounded-lg"
+                                    onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/cars/maruti_default.jpg') }}'; 
+                                            this.onerror=function(){this.onerror=null; this.parentNode.innerHTML='<div class=\'absolute inset-0 flex items-center justify-center\'><span class=\'text-5xl font-bold text-gray-400\'>{{ car.company[0] }}</span></div>';}">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ car.name }}</h3>
+                                <p class="text-primary text-2xl font-bold">₹{{ "{:,}".format(car.price) }}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="flex items-center text-gray-500 dark:text-gray-400">
+                                    <i class="ri-car-line mr-2"></i>
+                                    <span>{{ car.company }}</span>
+                                </div>
+                                <div class="flex items-center text-gray-500 dark:text-gray-400">
+                                    <i class="ri-dashboard-3-line mr-2"></i>
+                                    <span>{{ "{:,}".format(car.kms_driven) }} km</span>
+                                </div>
+                                <div class="flex items-center text-gray-500 dark:text-gray-400">
+                                    <i class="ri-gas-station-line mr-2"></i>
+                                    <span>{{ car.fuel_type }}</span>
+                                </div>
+                                <div class="flex items-center text-gray-500 dark:text-gray-400">
+                                    <i class="ri-calendar-line mr-2"></i>
+                                    <span>{{ car.year }}</span>
+                                </div>
+                            </div>
+                            
+                            {% if car.description %}
+                            <div>
+                                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Description</h4>
+                                <p class="text-gray-600 dark:text-gray-400">{{ car.description }}</p>
+                            </div>
+                            {% endif %}
+                            
+                            <div>
+                                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Seller</h4>
+                                <p class="text-gray-600 dark:text-gray-400">{{ car.owner.username }}</p>
+                                <p class="text-gray-500 dark:text-gray-500 text-sm">Member since {{ car.owner.created_at.strftime('%B %Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Form -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 md:p-8 md:col-span-2">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send a Message</h2>
+                        <form id="contact-seller-form">
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
+                                <input type="text" id="name" name="name" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" required {% if current_user.is_authenticated %}value="{{ current_user.username }}"{% endif %}>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" required {% if current_user.is_authenticated %}value="{{ current_user.email }}"{% endif %}>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" placeholder="(Optional)">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Message</label>
+                                <textarea id="message" name="message" rows="5" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" required>Hello, I am interested in your {{ car.name }} listed for ₹{{ "{:,}".format(car.price) }}. Is it still available?</textarea>
+                            </div>
+                            
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <button type="submit" class="bg-primary text-white py-3 px-6 rounded-button font-medium flex-grow">Send Message</button>
+                                <button type="button" onclick="window.history.back()" class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-6 rounded-button font-medium">Cancel</button>
+                            </div>
+                        </form>
+                        
+                        <div id="contact-success" class="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded mt-4 hidden">
+                            <p>Your message has been sent! The seller will contact you soon.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Similar Cars Section -->
+    <section class="py-12 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Similar Cars</h2>
+                <p class="text-gray-600 dark:text-gray-400">You might also be interested in these similar cars</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {% for similar_car in similar_cars %}
+                <div class="car-card bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 relative">
+                        {% if similar_car.image_path %}
+                            <img src="{{ url_for('static', filename='images/cars/' + similar_car.image_path) }}" 
+                                alt="{{ similar_car.name }}" 
+                                class="w-full h-full object-cover">
+                        {% else %}
+                            {% set default_image = similar_car.company.lower() + '_default.jpg' %}
+                            <img src="{{ url_for('static', filename='images/cars/' + default_image) }}" 
+                                alt="{{ similar_car.name }}" 
+                                class="w-full h-full object-cover"
+                                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/cars/maruti_default.jpg') }}'; 
+                                        this.onerror=function(){this.onerror=null; this.parentNode.innerHTML='<div class=\'absolute inset-0 flex items-center justify-center\'><span class=\'text-5xl font-bold text-gray-400\'>{{ similar_car.company[0] }}</span></div>';}">
+                        {% endif %}
+                        <div class="absolute top-4 right-4 bg-primary text-white text-xs px-2 py-1 rounded">{{ similar_car.fuel_type }}</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ similar_car.name }}</h3>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">{{ similar_car.year }}</span>
+                        </div>
+                        
+                        <div class="text-2xl font-bold text-primary mb-4">₹{{ "{:,}".format(similar_car.price) }}</div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="flex items-center text-gray-500 dark:text-gray-400">
+                                <i class="ri-car-line mr-2"></i>
+                                <span>{{ similar_car.company }}</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 dark:text-gray-400">
+                                <i class="ri-dashboard-3-line mr-2"></i>
+                                <span>{{ "{:,}".format(similar_car.kms_driven) }} km</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="{{ url_for('contact_seller', car_id=similar_car.id) }}" class="flex-grow bg-primary text-white py-2 !rounded-button font-medium text-center">Contact Seller</a>
+                            <button onclick="toggleLike({{ similar_car.id }}, this)" 
+                                    class="like-btn w-10 h-10 flex items-center justify-center {{ 'bg-red-100' if current_user.is_authenticated and similar_car.id in liked_cars else 'bg-gray-100' }} !rounded-button transition-colors"
+                                    data-car-id="{{ similar_car.id }}">
+                                <i class="{{ 'ri-heart-fill text-red-500' if current_user.is_authenticated and similar_car.id in liked_cars else 'ri-heart-line text-gray-700' }} transition-colors"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle contact form submission
+        const contactForm = document.getElementById('contact-seller-form');
+        const contactSuccess = document.getElementById('contact-success');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const submitButton = contactForm.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = '<span class="loading-spinner mr-2"></span> Sending...';
+                submitButton.disabled = true;
+                
+                // Simulate form submission (in a real implementation, this would send data to the server)
+                setTimeout(function() {
+                    // Reset form and show success message
+                    contactForm.reset();
+                    contactSuccess.classList.remove('hidden');
+                    
+                    // Restore button state
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(function() {
+                        contactSuccess.classList.add('hidden');
+                    }, 5000);
+                }, 1500);
+            });
+        }
+    });
+</script>
+{% endblock %}

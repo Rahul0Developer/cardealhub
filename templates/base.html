@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Car Deal Hub - Find Your Perfect Car{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hero-section {
+            background-image: url('https://readdy.ai/api/search-image?query=luxury%20modern%20car%20with%20blurred%20background%2C%20premium%20automotive%20photography%2C%20high-end%20vehicle%20with%20sleek%20design%2C%20soft%20lighting%2C%20showroom%20quality%2C%20professional%20car%20photography%2C%20gradient%20background%20fading%20to%20light%20on%20the%20left%20side%20to%20allow%20text%20overlay%2C%20minimalist%20composition&width=1920&height=1080&seq=1&orientation=landscape');
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-overlay {
+            background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.5) 100%);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .checkmark {
+            height: 20px;
+            width: 20px;
+            background-color: #fff;
+            border: 2px solid #e5e7eb;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-checkbox input:checked ~ .checkmark {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        .checkmark:after {
+            content: "";
+            display: none;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #3b82f6;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        .price-range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    {% block head_extra %}{% endblock %}
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/" class="font-['Pacifico'] text-2xl text-primary">Car Deal Hub</a>
+            
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="/marketplace" class="text-gray-700 hover:text-primary font-medium transition-colors {% if request.path == '/marketplace' %}text-primary{% endif %}">Marketplace</a>
+                <a href="/predict" class="text-gray-700 hover:text-primary font-medium transition-colors {% if request.path == '/predict' %}text-primary{% endif %}">Predict</a>
+                <a href="/trends" class="text-gray-700 hover:text-primary font-medium transition-colors {% if request.path == '/trends' %}text-primary{% endif %}">Trends</a>
+                <a href="/list-car" class="text-gray-700 hover:text-primary font-medium transition-colors {% if request.path == '/list-car' %}text-primary{% endif %}">List Car</a>
+                
+                <!-- Resources Dropdown -->
+                <div class="relative group">
+                    <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors flex items-center {% if request.path in ['/blog', '/car-buying-guide', '/car-selling-tips', '/faq'] %}text-primary{% endif %}">
+                        Resources <i class="ri-arrow-down-s-line ml-1"></i>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-10 hidden group-hover:block">
+                        <a href="/blog" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {% if request.path == '/blog' %}bg-gray-100 text-primary{% endif %}">Blog</a>
+                        <a href="/car-buying-guide" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {% if request.path == '/car-buying-guide' %}bg-gray-100 text-primary{% endif %}">Car Buying Guide</a>
+                        <a href="/car-selling-tips" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {% if request.path == '/car-selling-tips' %}bg-gray-100 text-primary{% endif %}">Car Selling Tips</a>
+                        <a href="/faq" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {% if request.path == '/faq' %}bg-gray-100 text-primary{% endif %}">FAQ</a>
+                    </div>
+                </div>
+                
+                <a href="/contact" class="text-gray-700 hover:text-primary font-medium transition-colors {% if request.path == '/contact' %}text-primary{% endif %}">Contact Us</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                {% if current_user.is_authenticated %}
+                    <div class="relative group hidden md:block">
+                        <a href="#" class="text-gray-700 hover:text-primary font-medium transition-colors flex items-center">
+                            {{ current_user.username }} <i class="ri-arrow-down-s-line ml-1"></i>
+                        </a>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                            <a href="{{ url_for('user.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Dashboard</a>
+                            {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Panel</a>
+                            {% endif %}
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('user.dashboard') }}" class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap hidden md:block">Dashboard</a>
+                {% else %}
+                    <a href="/login" class="text-gray-700 hover:text-primary font-medium transition-colors hidden md:block">Login</a>
+                    <a href="/register" class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap hidden md:block">Register</a>
+                {% endif %}
+                
+                <div class="theme-toggle w-10 h-10 flex items-center justify-center cursor-pointer bg-gray-100 rounded-full transition-colors dark:bg-gray-700">
+                    <i class="ri-sun-line text-gray-700 dark:text-white"></i>
+                </div>
+                
+                <div class="md:hidden w-10 h-10 flex items-center justify-center cursor-pointer">
+                    <i class="ri-menu-line text-gray-700 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mx-auto px-4 pt-20">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        <div class="flex justify-between items-center">
+                            <div>{{ message }}</div>
+                            <button class="close-flash">
+                                <i class="ri-close-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <!-- Main Content -->
+    <main class="pt-16">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <a href="/" class="font-['Pacifico'] text-2xl text-white mb-4 block">Car Deal Hub</a>
+                    <p class="text-gray-400 mb-4">Find your perfect car at the best price. We provide market insights and price predictions to help you make informed decisions.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-primary transition-colors">
+                            <i class="ri-facebook-fill"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-primary transition-colors">
+                            <i class="ri-twitter-fill"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-primary transition-colors">
+                            <i class="ri-instagram-line"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-primary transition-colors">
+                            <i class="ri-linkedin-fill"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="/marketplace" class="text-gray-400 hover:text-white transition-colors">Browse Cars</a></li>
+                        <li><a href="/predict" class="text-gray-400 hover:text-white transition-colors">Price Prediction</a></li>
+                        <li><a href="/trends" class="text-gray-400 hover:text-white transition-colors">Market Trends</a></li>
+                        <li><a href="/list-car" class="text-gray-400 hover:text-white transition-colors">Sell Your Car</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/blog" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="/car-buying-guide" class="text-gray-400 hover:text-white transition-colors">Car Buying Guide</a></li>
+                        <li><a href="/car-selling-tips" class="text-gray-400 hover:text-white transition-colors">Car Selling Tips</a></li>
+                        <li><a href="/faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="/contact" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Contact</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center space-x-2">
+                            <i class="ri-map-pin-line text-primary"></i>
+                            <span class="text-gray-400">123 Car Street, Auto City, IN</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="ri-phone-line text-primary"></i>
+                            <span class="text-gray-400">+91 123 456 7890</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="ri-mail-line text-primary"></i>
+                            <span class="text-gray-400">info@cardealhub.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">&copy; 2023 Car Deal Hub. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+                    <a href="{{ url_for('admin.login') }}" class="text-gray-400 hover:text-white transition-colors">Admin</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

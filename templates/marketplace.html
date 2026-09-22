@@ -1,0 +1,509 @@
+{% extends 'base.html' %}
+
+{% block title %}Marketplace - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Marketplace Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Find Your Dream Car</h1>
+            <p class="text-gray-600">Browse through our verified car listings to find your perfect match.</p>
+        </div>
+    </section>
+    
+    <!-- Marketplace Content -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 md:mb-0">Available Cars</h2>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 flex items-center justify-center cursor-pointer bg-gray-100 rounded-full grid-view">
+                            <i class="ri-layout-grid-line text-gray-700"></i>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center cursor-pointer list-view">
+                            <i class="ri-list-check-2 text-gray-700"></i>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <select id="sort-by" class="appearance-none bg-gray-100 text-gray-700 py-2 pl-4 pr-8 !rounded-button">
+                            <option value="price">Sort by: Price</option>
+                            <option value="year">Sort by: Year</option>
+                            <option value="kms_driven">Sort by: Mileage</option>
+                        </select>
+                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                            <i class="ri-arrow-down-s-line text-gray-700"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-lg p-6 mb-10">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none w-5 h-5">
+                            <i class="ri-search-line text-gray-400"></i>
+                        </div>
+                        <input type="text" id="search-input" placeholder="Search by make, model, or keyword" class="w-full pl-10 pr-4 py-3 border-none rounded bg-white text-sm">
+                    </div>
+                    <button id="search-btn" class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap">Search</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                        <div class="relative">
+                            <select id="brand-filter" class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                <option value="">All Brands</option>
+                                {% for brand in brands %}
+                                <option value="{{ brand }}">{{ brand }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                <i class="ri-arrow-down-s-line text-gray-700"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                        <div class="relative">
+                            <select id="year-filter" class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                <option value="">All Years</option>
+                                {% for year in years %}
+                                <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                <i class="ri-arrow-down-s-line text-gray-700"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fuel Type</label>
+                        <div class="relative">
+                            <select id="fuel-filter" class="w-full appearance-none bg-white text-gray-700 py-2 pl-4 pr-8 rounded border-none text-sm">
+                                <option value="">All Types</option>
+                                {% for fuel_type in fuel_types %}
+                                <option value="{{ fuel_type }}">{{ fuel_type }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                <i class="ri-arrow-down-s-line text-gray-700"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
+                        <div class="px-2">
+                            <input type="range" id="price-range" min="50000" max="2000000" step="10000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="price-range-labels">
+                                <span class="text-xs text-gray-500">₹50,000</span>
+                                <span class="text-xs text-gray-500">₹2,000,000</span>
+                            </div>
+                            <div class="text-center mt-2">
+                                <span id="price-display" class="text-sm font-medium text-primary">Up to ₹2,000,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between">
+                    <button id="reset-filters" class="bg-gray-200 text-gray-700 px-4 py-2 !rounded-button text-sm">Reset Filters</button>
+                    <button id="apply-filters" class="bg-primary text-white px-4 py-2 !rounded-button text-sm">Apply Filters</button>
+                </div>
+            </div>
+
+            <!-- Car Listings -->
+            <div id="car-listings" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {% if cars %}
+                    {% for car in cars %}
+                    <div class="car-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="h-48 bg-gray-200 relative car-image-carousel" data-car-id="{{ car.id }}">
+                            <!-- Main image container -->
+                            <div class="car-image-container active">
+                                {% if car.image_path %}
+                                    <!-- Display main car image if available -->
+                                    <img src="{% if car.image_path.startswith('static/') %}{{ car.image_path }}{% else %}{{ url_for('static', filename='images/cars/' + car.image_path) }}{% endif %}" 
+                                         alt="{{ car.name }}" 
+                                         class="w-full h-full object-cover">
+                                {% else %}
+                                    <!-- Fallback to brand default image -->
+                                    {% set default_image = car.company.lower() + '_default.jpg' %}
+                                    <img src="{{ url_for('static', filename='images/cars/' + default_image) }}" 
+                                         alt="{{ car.name }}" 
+                                         class="w-full h-full object-cover"
+                                         onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/cars/' + car.company + '.jpg') }}'; 
+                                                  this.onerror=function(){this.onerror=null; this.parentNode.innerHTML='<div class=\'absolute inset-0 flex items-center justify-center\'><span class=\'text-5xl font-bold text-gray-400\'>{{ car.company[0] }}</span></div>';}">
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Second image container -->
+                            {% if car.image_path2 %}
+                            <div class="car-image-container hidden">
+                                <img src="{% if car.image_path2.startswith('static/') %}{{ car.image_path2 }}{% else %}{{ url_for('static', filename='images/cars/' + car.image_path2) }}{% endif %}" 
+                                     alt="{{ car.name }} - Image 2" 
+                                     class="w-full h-full object-cover">
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Third image container -->
+                            {% if car.image_path3 %}
+                            <div class="car-image-container hidden">
+                                <img src="{% if car.image_path3.startswith('static/') %}{{ car.image_path3 }}{% else %}{{ url_for('static', filename='images/cars/' + car.image_path3) }}{% endif %}" 
+                                     alt="{{ car.name }} - Image 3" 
+                                     class="w-full h-full object-cover">
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Image navigation controls (if multiple images) -->
+                            {% if car.image_path2 or car.image_path3 %}
+                            <div class="absolute top-1/2 transform -translate-y-1/2 left-2">
+                                <button class="car-nav-prev w-8 h-8 rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 text-white flex items-center justify-center">
+                                    <i class="ri-arrow-left-s-line"></i>
+                                </button>
+                            </div>
+                            <div class="absolute top-1/2 transform -translate-y-1/2 right-2">
+                                <button class="car-nav-next w-8 h-8 rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 text-white flex items-center justify-center">
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-2 left-0 right-0 flex justify-center space-x-2">
+                                <span class="car-nav-dot w-2 h-2 rounded-full bg-white bg-opacity-70 cursor-pointer dot-active"></span>
+                                {% if car.image_path2 %}
+                                <span class="car-nav-dot w-2 h-2 rounded-full bg-white bg-opacity-40 cursor-pointer"></span>
+                                {% endif %}
+                                {% if car.image_path3 %}
+                                <span class="car-nav-dot w-2 h-2 rounded-full bg-white bg-opacity-40 cursor-pointer"></span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            {% if car.fuel_type %}
+                            <div class="absolute top-4 right-4 bg-primary text-white text-xs px-2 py-1 rounded">{{ car.fuel_type }}</div>
+                            {% endif %}
+                            
+                            {% if car.condition %}
+                            <div class="absolute top-4 left-4 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">{{ car.condition }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-gray-900">{{ car.name }}</h3>
+                                <span class="text-sm text-gray-500">{{ car.year }}</span>
+                            </div>
+                            
+                            <div class="text-2xl font-bold text-primary mb-4">₹{{ "{:,}".format(car.price) }}</div>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="flex items-center text-gray-500">
+                                    <i class="ri-car-line mr-2"></i>
+                                    <span>{{ car.company }}</span>
+                                </div>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="ri-dashboard-3-line mr-2"></i>
+                                    <span>{{ "{:,}".format(car.kms_driven) }} km</span>
+                                </div>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="ri-gas-station-line mr-2"></i>
+                                    <span>{{ car.fuel_type }}</span>
+                                </div>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="ri-calendar-line mr-2"></i>
+                                    <span>{{ car.year }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2 mb-3">
+                                <a href="{{ url_for('contact_seller', car_id=car.id) }}" class="flex-grow bg-primary text-white py-2 !rounded-button font-medium text-center">Contact Seller</a>
+                                <button onclick="toggleLike({{ car.id }}, this)" 
+                                        class="like-btn w-10 h-10 flex items-center justify-center {{ 'bg-red-100' if current_user.is_authenticated and car.id in liked_cars else 'bg-gray-100' }} !rounded-button transition-colors"
+                                        data-car-id="{{ car.id }}">
+                                    <i class="{{ 'ri-heart-fill text-red-500' if current_user.is_authenticated and car.id in liked_cars else 'ri-heart-line text-gray-700' }} transition-colors"></i>
+                                </button>
+                            </div>
+                            {% if current_user.is_authenticated and car.user_id != current_user.id %}
+                            <a href="{{ url_for('transaction.payment_page', car_id=car.id) }}" class="block w-full bg-green-600 hover:bg-green-700 text-white py-2 !rounded-button font-medium text-center transition-colors">
+                                <i class="ri-shopping-cart-line mr-1"></i> Buy Now
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-span-3 text-center py-12">
+                        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ri-search-line text-gray-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">No cars found</h3>
+                        <p class="text-gray-600">Try adjusting your filters or search criteria.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if cars|length > 0 %}
+            <div class="flex justify-center mt-10">
+                <div class="flex space-x-1">
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white">1</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">2</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">3</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">...</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">10</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Price range slider
+        const priceRange = document.getElementById('price-range');
+        const priceDisplay = document.getElementById('price-display');
+        
+        if (priceRange && priceDisplay) {
+            priceRange.addEventListener('input', function() {
+                const value = this.value;
+                priceDisplay.textContent = `Up to ₹${parseInt(value).toLocaleString('en-IN')}`;
+            });
+        }
+        
+        // View toggle
+        const gridView = document.querySelector('.grid-view');
+        const listView = document.querySelector('.list-view');
+        const carListings = document.getElementById('car-listings');
+        
+        if (gridView && listView && carListings) {
+            gridView.addEventListener('click', function() {
+                gridView.classList.add('bg-gray-100');
+                listView.classList.remove('bg-gray-100');
+                carListings.classList.remove('md:grid-cols-1');
+                carListings.classList.add('md:grid-cols-3');
+            });
+            
+            listView.addEventListener('click', function() {
+                listView.classList.add('bg-gray-100');
+                gridView.classList.remove('bg-gray-100');
+                carListings.classList.remove('md:grid-cols-3');
+                carListings.classList.add('md:grid-cols-1');
+            });
+        }
+        
+        // Reset filters
+        const resetFiltersBtn = document.getElementById('reset-filters');
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', function() {
+                document.getElementById('brand-filter').value = '';
+                document.getElementById('year-filter').value = '';
+                document.getElementById('fuel-filter').value = '';
+                document.getElementById('price-range').value = 2000000;
+                document.getElementById('search-input').value = '';
+                priceDisplay.textContent = 'Up to ₹2,000,000';
+            });
+        }
+        
+        // Apply filters (would be linked to form submission in a real implementation)
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', function() {
+                // Build query params
+                const brand = document.getElementById('brand-filter').value;
+                const year = document.getElementById('year-filter').value;
+                const fuelType = document.getElementById('fuel-filter').value;
+                const maxPrice = document.getElementById('price-range').value;
+                const search = document.getElementById('search-input').value;
+                const sortBy = document.getElementById('sort-by').value;
+                
+                // Create URL with query parameters
+                let url = '/marketplace?';
+                if (brand) url += `brand=${encodeURIComponent(brand)}&`;
+                if (year) url += `year=${encodeURIComponent(year)}&`;
+                if (fuelType) url += `fuel_type=${encodeURIComponent(fuelType)}&`;
+                if (maxPrice) url += `max_price=${encodeURIComponent(maxPrice)}&`;
+                if (search) url += `search=${encodeURIComponent(search)}&`;
+                if (sortBy) url += `sort_by=${encodeURIComponent(sortBy)}&`;
+                
+                // Remove trailing &
+                if (url.endsWith('&')) {
+                    url = url.slice(0, -1);
+                }
+                
+                // Navigate to filtered results
+                window.location.href = url;
+            });
+        }
+        
+        // Search button
+        const searchBtn = document.getElementById('search-btn');
+        const searchInput = document.getElementById('search-input');
+        
+        if (searchBtn && searchInput) {
+            searchBtn.addEventListener('click', function() {
+                if (searchInput.value.trim()) {
+                    window.location.href = `/marketplace?search=${encodeURIComponent(searchInput.value.trim())}`;
+                }
+            });
+            
+            // Allow search on enter key
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBtn.click();
+                }
+            });
+        }
+        
+        // Sort by change handler
+        const sortBySelect = document.getElementById('sort-by');
+        if (sortBySelect) {
+            sortBySelect.addEventListener('change', function() {
+                // Get current URL and update or add sort_by parameter
+                const url = new URL(window.location.href);
+                url.searchParams.set('sort_by', this.value);
+                window.location.href = url.toString();
+            });
+        }
+    });
+    
+    // Function to toggle like status
+    function toggleLike(carId, buttonElement) {
+        // Check if user is logged in
+        fetch('/user/like/' + carId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                // User not logged in, redirect to login
+                window.location.href = '/login?next=/marketplace';
+                throw new Error('Not logged in');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const icon = buttonElement.querySelector('i');
+                
+                if (data.action === 'liked') {
+                    // Update to liked state
+                    buttonElement.classList.remove('bg-gray-100');
+                    buttonElement.classList.add('bg-red-100');
+                    icon.classList.remove('ri-heart-line', 'text-gray-700');
+                    icon.classList.add('ri-heart-fill', 'text-red-500');
+                } else {
+                    // Update to unliked state
+                    buttonElement.classList.remove('bg-red-100');
+                    buttonElement.classList.add('bg-gray-100');
+                    icon.classList.remove('ri-heart-fill', 'text-red-500');
+                    icon.classList.add('ri-heart-line', 'text-gray-700');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error toggling like:', error);
+        });
+    }
+    
+    // Function to contact seller
+    function contactSeller(carId) {
+        // You can implement a modal or redirect to a contact form
+        alert('Contact seller feature will be implemented soon!');
+    }
+    
+    // Initialize image carousels for car listings
+    function initializeCarImageCarousels() {
+        const carousels = document.querySelectorAll('.car-image-carousel');
+        
+        carousels.forEach(carousel => {
+            const carId = carousel.dataset.carId;
+            const images = carousel.querySelectorAll('.car-image-container');
+            const dots = carousel.querySelectorAll('.car-nav-dot');
+            const prevBtn = carousel.querySelector('.car-nav-prev');
+            const nextBtn = carousel.querySelector('.car-nav-next');
+            
+            if (images.length <= 1) return; // Skip if there's only one image
+            
+            let currentIndex = 0;
+            
+            // Function to show a specific image
+            function showImage(index) {
+                // Hide all images
+                images.forEach(img => img.classList.add('hidden'));
+                dots.forEach(dot => dot.classList.remove('dot-active', 'bg-opacity-70'));
+                dots.forEach(dot => dot.classList.add('bg-opacity-40'));
+                
+                // Show the selected image
+                images[index].classList.remove('hidden');
+                if (dots[index]) {
+                    dots[index].classList.add('dot-active', 'bg-opacity-70');
+                    dots[index].classList.remove('bg-opacity-40');
+                }
+                
+                currentIndex = index;
+            }
+            
+            // Set up next button
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    const newIndex = (currentIndex + 1) % images.length;
+                    showImage(newIndex);
+                });
+            }
+            
+            // Set up previous button
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    const newIndex = (currentIndex - 1 + images.length) % images.length;
+                    showImage(newIndex);
+                });
+            }
+            
+            // Set up dot navigation
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    showImage(index);
+                });
+            });
+            
+            // Auto-advance every 5 seconds
+            let autoplayInterval = setInterval(() => {
+                // Only autoplay if not currently being interacted with
+                if (!carousel.matches(':hover')) {
+                    const newIndex = (currentIndex + 1) % images.length;
+                    showImage(newIndex);
+                }
+            }, 5000);
+            
+            // Clear interval when page is not visible to save resources
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    clearInterval(autoplayInterval);
+                } else {
+                    autoplayInterval = setInterval(() => {
+                        if (!carousel.matches(':hover')) {
+                            const newIndex = (currentIndex + 1) % images.length;
+                            showImage(newIndex);
+                        }
+                    }, 5000);
+                }
+            });
+        });
+    }
+    
+    // Initialize carousels when DOM is loaded
+    initializeCarImageCarousels();
+</script>
+{% endblock %}

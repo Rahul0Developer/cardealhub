@@ -1,0 +1,212 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Transaction Details - Admin Dashboard{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-10">
+        <div class="mb-6 flex items-center">
+            <a href="{{ url_for('admin.transactions') }}" class="inline-flex items-center text-gray-600 hover:text-primary">
+                <i class="ri-arrow-left-line mr-2"></i> Back to Transactions
+            </a>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">Transaction Details</h1>
+        
+        <!-- Transaction Info Card -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-900">Transaction Information</h2>
+                    <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full 
+                        {% if transaction.status == 'Success' %}
+                            bg-green-100 text-green-800
+                        {% elif transaction.status == 'Pending' %}
+                            bg-yellow-100 text-yellow-800
+                        {% else %}
+                            bg-red-100 text-red-800
+                        {% endif %}">
+                        {{ transaction.status }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-2">Transaction ID</h3>
+                        <p class="text-gray-900 font-mono">{{ transaction.transaction_id }}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-2">Date & Time</h3>
+                        <p class="text-gray-900">{{ transaction.timestamp.strftime('%d %b, %Y at %H:%M:%S') }}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-2">Payment Method</h3>
+                        <p class="text-gray-900 capitalize">{{ transaction.payment_method }}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-2">Amount</h3>
+                        <p class="text-xl font-bold text-primary">₹{{ '{:,.0f}'.format(transaction.amount) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Car and User Details -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Car Details -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden md:col-span-1">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Car Information</h2>
+                </div>
+                
+                <div class="p-6">
+                    <div class="aspect-w-16 aspect-h-10 rounded-lg overflow-hidden mb-4">
+                        <img src="{{ transaction.car.image_path }}" alt="{{ transaction.car.name }}" class="object-cover w-full h-full">
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ transaction.car.company }} {{ transaction.car.name }}</h3>
+                    <p class="text-gray-600 mb-4">{{ transaction.car.year }} • {{ transaction.car.fuel_type }} • {{ '{:,}'.format(transaction.car.kms_driven) }} km</p>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Listed Price:</span>
+                            <span class="font-medium">₹{{ '{:,.0f}'.format(transaction.car.price) }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Location:</span>
+                            <span class="font-medium">{{ transaction.car.location }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Condition:</span>
+                            <span class="font-medium">{{ transaction.car.condition }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <a href="{{ url_for('admin.update_listing_status', car_id=transaction.car.id) }}" class="inline-flex items-center text-primary hover:underline">
+                            <i class="ri-edit-line mr-1"></i> Manage Listing
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Buyer Details -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Buyer Information</h2>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-xl">
+                            <i class="ri-user-line"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">{{ transaction.buyer.username }}</h3>
+                            <p class="text-gray-600">{{ transaction.buyer.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">User ID:</span>
+                            <span class="font-medium">{{ transaction.buyer.id }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Registered:</span>
+                            <span class="font-medium">{{ transaction.buyer.created_at.strftime('%d %b, %Y') }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Status:</span>
+                            <span class="font-medium">{{ 'Active' if not transaction.buyer.is_banned else 'Banned' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <a href="{{ url_for('admin.update_user_status', user_id=transaction.buyer.id) }}" class="inline-flex items-center text-primary hover:underline">
+                            <i class="ri-user-settings-line mr-1"></i> Manage User
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seller Details -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Seller Information</h2>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-xl">
+                            <i class="ri-user-line"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">{{ transaction.seller.username }}</h3>
+                            <p class="text-gray-600">{{ transaction.seller.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">User ID:</span>
+                            <span class="font-medium">{{ transaction.seller.id }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Registered:</span>
+                            <span class="font-medium">{{ transaction.seller.created_at.strftime('%d %b, %Y') }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Status:</span>
+                            <span class="font-medium">{{ 'Active' if not transaction.seller.is_banned else 'Banned' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <a href="{{ url_for('admin.update_user_status', user_id=transaction.seller.id) }}" class="inline-flex items-center text-primary hover:underline">
+                            <i class="ri-user-settings-line mr-1"></i> Manage User
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Actions -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Admin Actions</h2>
+            </div>
+            
+            <div class="p-6">
+                <div class="flex flex-wrap gap-4">
+                    <!-- Only show these options if the transaction is still pending -->
+                    {% if transaction.status == 'Pending' %}
+                    <form action="{{ url_for('admin.update_transaction_status', transaction_id=transaction.id) }}" method="post">
+                        <input type="hidden" name="status" value="Success">
+                        <button type="submit" class="btn-success">Mark as Successful</button>
+                    </form>
+                    
+                    <form action="{{ url_for('admin.update_transaction_status', transaction_id=transaction.id) }}" method="post">
+                        <input type="hidden" name="status" value="Failed">
+                        <button type="submit" class="btn-danger">Mark as Failed</button>
+                    </form>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('admin.send_transaction_receipt', transaction_id=transaction.id) }}" class="btn-secondary">
+                        <i class="ri-mail-send-line mr-1"></i> Send Receipt Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

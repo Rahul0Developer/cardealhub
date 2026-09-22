@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Login Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Login to Your Account</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Welcome back! Login to manage your car listings, save favorites, and more.</p>
+        </div>
+    </section>
+    
+    <!-- Login Form -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto bg-white rounded-lg shadow-sm p-6 md:p-8">
+                <form action="{{ url_for('login') }}" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-4">
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        {{ form.username(class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none", required=true) }}
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        {{ form.password(class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none", required=true) }}
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <label class="custom-checkbox">
+                            {{ form.remember }}
+                            <span class="checkmark mr-2"></span>
+                            <span class="text-sm text-gray-600">Remember me</span>
+                        </label>
+                        
+                        <a href="#" class="text-sm text-primary hover:underline">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-button font-medium mb-4">Login</button>
+                    
+                    <p class="text-center text-gray-600">
+                        Don't have an account? <a href="/register" class="text-primary hover:underline">Register now</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Benefits Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Benefits of Creating an Account</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Enjoy these exclusive features when you join Car Deal Hub.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white rounded-lg p-6 shadow-sm text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-car-line text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">List Your Cars</h3>
+                    <p class="text-gray-600">Create and manage car listings to sell your vehicles at the best price.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-heart-line text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Save Favorites</h3>
+                    <p class="text-gray-600">Bookmark cars you're interested in and keep track of them in one place.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm text-center">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-notification-line text-yellow-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Price Alerts</h3>
+                    <p class="text-gray-600">Get notified when cars matching your criteria are listed or when prices drop.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

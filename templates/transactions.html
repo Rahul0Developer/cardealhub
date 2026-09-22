@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block title %}Transaction History - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap">
+                <!-- Sidebar -->
+                <div class="w-full lg:w-1/4 mb-8 lg:mb-0 lg:pr-8">
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-6 bg-gray-50 border-b border-gray-200">
+                            <h2 class="text-lg font-bold text-gray-900">My Account</h2>
+                        </div>
+                        <div class="divide-y divide-gray-200">
+                            <a href="{{ url_for('user.dashboard') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-dashboard-line mr-2"></i> Dashboard
+                            </a>
+                            <a href="{{ url_for('user.my_listings') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-file-list-3-line mr-2"></i> My Listings
+                            </a>
+                            <a href="{{ url_for('user.liked_cars') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-heart-line mr-2"></i> Liked Cars
+                            </a>
+                            <a href="{{ url_for('transaction.transactions_history') }}" class="block px-6 py-4 text-primary font-medium bg-primary-light">
+                                <i class="ri-exchange-dollar-line mr-2"></i> Transactions
+                            </a>
+                            <a href="{{ url_for('user.prediction_history') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-line-chart-line mr-2"></i> Prediction History
+                            </a>
+                            <a href="{{ url_for('user.profile') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-user-settings-line mr-2"></i> Profile Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="w-full lg:w-3/4">
+                    <!-- Tabs for Purchases/Sales -->
+                    <div class="border-b border-gray-200 mb-8">
+                        <ul class="flex flex-wrap -mb-px">
+                            <li class="mr-2">
+                                <a href="{{ url_for('transaction.transactions_history', type='purchases') }}" class="inline-block px-4 py-3 {{ 'text-primary border-b-2 border-primary' if transaction_type == 'purchases' else 'text-gray-500 hover:text-gray-700' }}">
+                                    My Purchases
+                                </a>
+                            </li>
+                            <li class="mr-2">
+                                <a href="{{ url_for('transaction.transactions_history', type='sales') }}" class="inline-block px-4 py-3 {{ 'text-primary border-b-2 border-primary' if transaction_type == 'sales' else 'text-gray-500 hover:text-gray-700' }}">
+                                    My Sales
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    {% if transactions %}
+                    <!-- Transaction Filters -->
+                    <div class="flex flex-wrap justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">
+                            {% if transaction_type == 'purchases' %}
+                                My Purchases
+                            {% else %}
+                                My Sales
+                            {% endif %}
+                        </h2>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div>
+                                <select id="status-filter" class="form-select">
+                                    <option value="all">All Status</option>
+                                    <option value="Success">Success</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Failed">Failed</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <select id="period-filter" class="form-select">
+                                    <option value="all">All Time</option>
+                                    <option value="30days">Last 30 Days</option>
+                                    <option value="90days">Last 90 Days</option>
+                                    <option value="year">This Year</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Transactions List -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Transaction ID
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Car Details
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Amount
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for transaction in transactions %}
+                                    <tr class="transaction-row" data-status="{{ transaction.status }}">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <span class="font-mono">{{ transaction.transaction_id[:8] }}...</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="h-10 w-10 flex-shrink-0">
+                                                    <img class="h-10 w-10 rounded-full object-cover" src="{{ transaction.car.image_path }}" alt="{{ transaction.car.name }}">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ transaction.car.company }} {{ transaction.car.name }}</div>
+                                                    <div class="text-sm text-gray-500">{{ transaction.car.year }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ transaction.timestamp.strftime('%d %b, %Y') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            ₹{{ '{:,.0f}'.format(transaction.amount) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                {% if transaction.status == 'Success' %}
+                                                    bg-green-100 text-green-800
+                                                {% elif transaction.status == 'Pending' %}
+                                                    bg-yellow-100 text-yellow-800
+                                                {% else %}
+                                                    bg-red-100 text-red-800
+                                                {% endif %}">
+                                                {{ transaction.status }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            {% if transaction.status == 'Success' %}
+                                                {% if transaction.receipt_url %}
+                                                <a href="{{ transaction.receipt_url }}" class="text-primary hover:text-primary-dark" target="_blank">
+                                                    <i class="ri-file-download-line mr-1"></i> Receipt
+                                                </a>
+                                                {% endif %}
+                                            {% elif transaction.status == 'Pending' %}
+                                                <a href="{{ url_for('check_payment_status', transaction_id=transaction.id) }}" class="text-blue-600 hover:text-blue-800">
+                                                    <i class="ri-refresh-line mr-1"></i> Check Status
+                                                </a>
+                                            {% elif transaction.status == 'Failed' %}
+                                                <a href="{{ url_for('payment_page', car_id=transaction.car_id) }}" class="text-primary hover:text-primary-dark">
+                                                    <i class="ri-restart-line mr-1"></i> Try Again
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        {% if pagination.pages > 1 %}
+                        <div class="px-6 py-4 border-t border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm text-gray-500">
+                                    Showing {{ pagination.items }} items
+                                </div>
+                                <div class="flex space-x-2">
+                                    {% if pagination.has_prev %}
+                                    <a href="{{ url_for('transaction.transactions_history', type=transaction_type, page=pagination.prev_num) }}" class="btn-secondary-sm px-3">
+                                        Previous
+                                    </a>
+                                    {% endif %}
+                                    
+                                    {% if pagination.has_next %}
+                                    <a href="{{ url_for('transaction.transactions_history', type=transaction_type, page=pagination.next_num) }}" class="btn-secondary-sm px-3">
+                                        Next
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <!-- Empty State -->
+                    <div class="bg-white rounded-lg shadow-sm p-8 text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-2xl mx-auto mb-4">
+                            <i class="ri-exchange-dollar-line"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">No transactions found</h3>
+                        <p class="text-gray-600 mb-6">
+                            {% if transaction_type == 'purchases' %}
+                                You haven't made any car purchases yet.
+                            {% else %}
+                                You haven't sold any cars yet.
+                            {% endif %}
+                        </p>
+                        
+                        {% if transaction_type == 'purchases' %}
+                        <a href="{{ url_for('marketplace') }}" class="btn-primary">
+                            Browse Cars
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('list_car') }}" class="btn-primary">
+                            List Your Car
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusFilter = document.getElementById('status-filter');
+        const periodFilter = document.getElementById('period-filter');
+        const transactionRows = document.querySelectorAll('.transaction-row');
+        
+        if (statusFilter && periodFilter) {
+            // Status filter
+            statusFilter.addEventListener('change', function() {
+                filterTransactions();
+            });
+            
+            // Period filter (simplified for frontend demo)
+            periodFilter.addEventListener('change', function() {
+                // In a real implementation, this would trigger a server request
+                // For now, just simulate filtering by hiding some rows randomly
+                filterTransactions();
+            });
+            
+            function filterTransactions() {
+                const selectedStatus = statusFilter.value;
+                
+                transactionRows.forEach(row => {
+                    const rowStatus = row.dataset.status;
+                    
+                    if (selectedStatus === 'all' || selectedStatus === rowStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - Car Deal Hub{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Admin specific styles */
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --secondary: #10B981;
+            --secondary-dark: #059669;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --success: #10B981;
+        }
+        
+        .text-primary { color: var(--primary); }
+        .bg-primary { background-color: var(--primary); }
+        .hover\:bg-primary-dark:hover { background-color: var(--primary-dark); }
+        .border-primary { border-color: var(--primary); }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+    <!-- Admin Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{{ url_for('admin.dashboard') }}" class="font-bold text-xl text-primary flex items-center">
+                        <i class="ri-dashboard-line mr-2"></i>
+                        <span>Admin Panel</span>
+                    </a>
+                </div>
+                
+                <!-- Right Menu -->
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('index') }}" class="text-gray-600 hover:text-primary">
+                        <i class="ri-home-line mr-1"></i>
+                        View Site
+                    </a>
+                    
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900">
+                            <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                <span class="text-blue-600 font-medium">{{ current_user.username[0]|upper }}</span>
+                            </div>
+                            <span>{{ current_user.username }}</span>
+                            <i class="ri-arrow-down-s-line ml-1"></i>
+                        </button>
+                        
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                            <a href="{{ url_for('user.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <div class="flash-message {{ category }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="bg-white py-6 mt-auto border-t border-gray-200">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-600 text-sm">© {{ now.year }} Car Deal Hub Admin Panel. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

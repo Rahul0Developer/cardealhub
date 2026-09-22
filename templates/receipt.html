@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Receipt - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <section class="py-10">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto">
+                <!-- Printable Receipt -->
+                <div class="bg-white rounded-lg shadow-sm p-8 mb-8" id="receipt">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Payment Receipt</h1>
+                            <p class="text-gray-600">Car Deal Hub</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-lg font-bold text-primary">RECEIPT</div>
+                            <div class="text-gray-600">#{{ transaction.id }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-sm font-semibold text-gray-700 uppercase mb-1">From</h2>
+                            <div class="text-gray-900">{{ transaction.seller.username }}</div>
+                            <div class="text-gray-600">{{ transaction.seller.email }}</div>
+                        </div>
+                        
+                        <div class="text-right">
+                            <h2 class="text-sm font-semibold text-gray-700 uppercase mb-1">To</h2>
+                            <div class="text-gray-900">{{ transaction.buyer.username }}</div>
+                            <div class="text-gray-600">{{ transaction.buyer.email }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h2 class="text-sm font-semibold text-gray-700 uppercase mb-2">Payment Details</h2>
+                        <div class="border rounded-lg overflow-hidden">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ transaction.car.company }} {{ transaction.car.name }} ({{ transaction.car.year }})</div>
+                                            <div class="text-sm text-gray-500">VIN: #CAR{{ transaction.car_id }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">₹{{ '{:,.0f}'.format(transaction.car.price) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">Processing Fee</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">₹{{ '{:,.0f}'.format(transaction.amount - transaction.car.price) }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total Amount</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary text-right">₹{{ '{:,.0f}'.format(transaction.amount) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div>
+                            <h2 class="text-sm font-semibold text-gray-700 uppercase mb-2">Transaction Info</h2>
+                            <div class="space-y-1">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Transaction ID:</span>
+                                    <span class="text-sm text-gray-900 font-mono">{{ transaction.transaction_id }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Date:</span>
+                                    <span class="text-sm text-gray-900">{{ transaction.timestamp.strftime('%d %b, %Y') }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Time:</span>
+                                    <span class="text-sm text-gray-900">{{ transaction.timestamp.strftime('%H:%M:%S') }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Payment Method:</span>
+                                    <span class="text-sm text-gray-900 capitalize">{{ transaction.payment_method }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Status:</span>
+                                    <span class="text-sm font-medium text-green-600">{{ transaction.status }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h2 class="text-sm font-semibold text-gray-700 uppercase mb-2">Car Details</h2>
+                            <div class="space-y-1">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Make & Model:</span>
+                                    <span class="text-sm text-gray-900">{{ transaction.car.company }} {{ transaction.car.name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Year:</span>
+                                    <span class="text-sm text-gray-900">{{ transaction.car.year }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Fuel Type:</span>
+                                    <span class="text-sm text-gray-900">{{ transaction.car.fuel_type }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Kilometers:</span>
+                                    <span class="text-sm text-gray-900">{{ '{:,}'.format(transaction.car.kms_driven) }} km</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Location:</span>
+                                    <span class="text-sm text-gray-900">{{ transaction.car.location }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-6 mt-6">
+                        <div class="text-center text-gray-600 text-sm">
+                            <p>Thank you for your business with Car Deal Hub!</p>
+                            <p class="mt-1">For any inquiries, please contact support@cardealhub.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex justify-center space-x-4">
+                    <button id="print-receipt" class="btn-secondary inline-flex items-center">
+                        <i class="ri-printer-line mr-2"></i> Print Receipt
+                    </button>
+                    
+                    <a href="{{ url_for('transaction.transactions_history') }}" class="btn-primary inline-flex items-center">
+                        <i class="ri-arrow-left-line mr-2"></i> Back to Transactions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const printBtn = document.getElementById('print-receipt');
+        
+        if (printBtn) {
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+        }
+    });
+</script>
+
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #receipt, #receipt * {
+            visibility: visible;
+        }
+        #receipt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

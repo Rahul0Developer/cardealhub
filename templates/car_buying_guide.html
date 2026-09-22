@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+
+{% block title %}Car Deal Hub - Car Buying Guide{% endblock %}
+
+{% block content %}
+    <!-- Header -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Car Buying Guide</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Everything you need to know before purchasing your next vehicle.</p>
+        </div>
+    </section>
+    
+    <!-- Steps Overview -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Your Car Buying Journey</h2>
+                
+                <div class="flex flex-col md:flex-row gap-4 mb-12">
+                    <div class="bg-white rounded-lg shadow-sm p-6 flex-1 text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="font-bold">1</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Research & Budget</h3>
+                        <p class="text-gray-600">Set your budget and research which cars meet your needs and preferences.</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6 flex-1 text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="font-bold">2</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Test Drive</h3>
+                        <p class="text-gray-600">Contact sellers, inspect cars, and take them for a test drive to experience firsthand.</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6 flex-1 text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="font-bold">3</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Negotiate & Purchase</h3>
+                        <p class="text-gray-600">Negotiate a fair price and complete all necessary paperwork for the purchase.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Interactive Checklist -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Car Buying Checklist</h2>
+                <p class="text-gray-600 mb-8 text-center">Use this interactive checklist to track your progress through the car buying process.</p>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item1" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item1" class="flex-grow text-gray-700 cursor-pointer">Determine your budget and financing options</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item2" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item2" class="flex-grow text-gray-700 cursor-pointer">Research car models that fit your needs</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item3" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item3" class="flex-grow text-gray-700 cursor-pointer">Check vehicle history reports</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item4" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item4" class="flex-grow text-gray-700 cursor-pointer">Arrange test drives with sellers</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item5" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item5" class="flex-grow text-gray-700 cursor-pointer">Inspect vehicle condition thoroughly</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item6" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item6" class="flex-grow text-gray-700 cursor-pointer">Consider getting a professional inspection</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item7" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item7" class="flex-grow text-gray-700 cursor-pointer">Negotiate the final price</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item8" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item8" class="flex-grow text-gray-700 cursor-pointer">Confirm insurance coverage</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item9" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item9" class="flex-grow text-gray-700 cursor-pointer">Complete all necessary paperwork</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer checklist-item">
+                            <input type="checkbox" id="item10" class="mr-3 h-5 w-5 text-primary focus:ring-primary">
+                            <label for="item10" class="flex-grow text-gray-700 cursor-pointer">Arrange for vehicle registration and transfer</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-between items-center">
+                        <div class="text-gray-700">
+                            <span id="completed-count">0</span> of 10 tasks completed
+                        </div>
+                        <button id="reset-checklist" class="text-gray-500 hover:text-gray-700 transition-colors">
+                            Reset Checklist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Financing Calculator -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Car Loan Calculator</h2>
+                <p class="text-gray-600 mb-8 text-center">Estimate your monthly payments based on car price, down payment, interest rate, and loan term.</p>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="car-price" class="block text-gray-700 mb-2">Car Price (₹)</label>
+                            <input type="number" id="car-price" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" value="1000000">
+                        </div>
+                        
+                        <div>
+                            <label for="down-payment" class="block text-gray-700 mb-2">Down Payment (₹)</label>
+                            <input type="number" id="down-payment" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" value="200000">
+                        </div>
+                        
+                        <div>
+                            <label for="interest-rate" class="block text-gray-700 mb-2">Interest Rate (%)</label>
+                            <input type="number" id="interest-rate" step="0.1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" value="8.5">
+                        </div>
+                        
+                        <div>
+                            <label for="loan-term" class="block text-gray-700 mb-2">Loan Term (years)</label>
+                            <select id="loan-term" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="1">1 year</option>
+                                <option value="2">2 years</option>
+                                <option value="3">3 years</option>
+                                <option value="4">4 years</option>
+                                <option value="5" selected>5 years</option>
+                                <option value="6">6 years</option>
+                                <option value="7">7 years</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="calculate-loan" class="bg-primary text-white py-2 px-6 rounded-lg hover:bg-primary-dark transition-colors w-full">Calculate</button>
+                    
+                    <div id="loan-results" class="mt-6 p-4 bg-gray-50 rounded-lg hidden">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Loan Summary</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-white rounded-lg">
+                                <div class="text-gray-700">Loan Amount</div>
+                                <div class="text-xl font-bold text-primary" id="loan-amount">₹800,000</div>
+                            </div>
+                            
+                            <div class="p-3 bg-white rounded-lg">
+                                <div class="text-gray-700">Monthly Payment</div>
+                                <div class="text-xl font-bold text-primary" id="monthly-payment">₹16,369</div>
+                            </div>
+                            
+                            <div class="p-3 bg-white rounded-lg">
+                                <div class="text-gray-700">Total Interest</div>
+                                <div class="text-xl font-bold text-primary" id="total-interest">₹182,140</div>
+                            </div>
+                            
+                            <div class="p-3 bg-white rounded-lg">
+                                <div class="text-gray-700">Total Payment</div>
+                                <div class="text-xl font-bold text-primary" id="total-payment">₹982,140</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Expert Tips -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Expert Car Buying Tips</h2>
+                
+                <div class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-start mb-2">
+                            <div class="mr-4">
+                                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="ri-price-tag-3-line"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Negotiate the Total Price, Not the Monthly Payment</h3>
+                                <p class="text-gray-600">Focus on the total cost of the car rather than monthly payments. Dealers may extend loan terms to lower monthly payments but end up charging more overall.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-start mb-2">
+                            <div class="mr-4">
+                                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="ri-search-line"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Research Market Value</h3>
+                                <p class="text-gray-600">Before negotiating, research what similar cars are selling for in your area. Knowing the market value gives you leverage in negotiations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-start mb-2">
+                            <div class="mr-4">
+                                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="ri-file-list-3-line"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Get a Vehicle History Report</h3>
+                                <p class="text-gray-600">Always review the vehicle history report before purchasing a used car. It can reveal accidents, damage, and service history that may affect your decision.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-start mb-2">
+                            <div class="mr-4">
+                                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="ri-tools-line"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Get a Pre-Purchase Inspection</h3>
+                                <p class="text-gray-600">For used cars, have a trusted mechanic inspect the vehicle before buying. A small inspection fee can save you from expensive repairs later.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Checklist functionality
+        const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+        const completedCount = document.getElementById('completed-count');
+        const resetButton = document.getElementById('reset-checklist');
+        
+        // Load saved checklist state from localStorage
+        const savedChecklist = JSON.parse(localStorage.getItem('carBuyingChecklist') || '[]');
+        
+        // Initialize checklist
+        function updateChecklistCount() {
+            const checked = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked').length;
+            completedCount.textContent = checked;
+            
+            // Save current state to localStorage
+            const checkedIds = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.id);
+            localStorage.setItem('carBuyingChecklist', JSON.stringify(checkedIds));
+        }
+        
+        // Restore saved state
+        checkboxes.forEach(checkbox => {
+            if (savedChecklist.includes(checkbox.id)) {
+                checkbox.checked = true;
+            }
+            
+            checkbox.addEventListener('change', updateChecklistCount);
+        });
+        
+        // Initialize counter
+        updateChecklistCount();
+        
+        // Reset button functionality
+        resetButton.addEventListener('click', function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateChecklistCount();
+        });
+        
+        // Loan calculator functionality
+        const calculateButton = document.getElementById('calculate-loan');
+        const resultsDiv = document.getElementById('loan-results');
+        
+        calculateButton.addEventListener('click', function() {
+            const carPrice = parseFloat(document.getElementById('car-price').value);
+            const downPayment = parseFloat(document.getElementById('down-payment').value);
+            const interestRate = parseFloat(document.getElementById('interest-rate').value);
+            const loanTerm = parseInt(document.getElementById('loan-term').value);
+            
+            if (isNaN(carPrice) || isNaN(downPayment) || isNaN(interestRate) || isNaN(loanTerm)) {
+                alert('Please enter valid numbers for all fields.');
+                return;
+            }
+            
+            const loanAmount = carPrice - downPayment;
+            const monthlyRate = interestRate / 100 / 12;
+            const numberOfPayments = loanTerm * 12;
+            
+            const monthlyPayment = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments) / 
+                                  (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            
+            const totalPayment = monthlyPayment * numberOfPayments;
+            const totalInterest = totalPayment - loanAmount;
+            
+            document.getElementById('loan-amount').textContent = '₹' + loanAmount.toLocaleString('en-IN');
+            document.getElementById('monthly-payment').textContent = '₹' + monthlyPayment.toFixed(0).toLocaleString('en-IN');
+            document.getElementById('total-interest').textContent = '₹' + totalInterest.toFixed(0).toLocaleString('en-IN');
+            document.getElementById('total-payment').textContent = '₹' + totalPayment.toFixed(0).toLocaleString('en-IN');
+            
+            resultsDiv.classList.remove('hidden');
+        });
+    });
+</script>
+{% endblock %}
