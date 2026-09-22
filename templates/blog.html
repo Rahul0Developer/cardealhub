@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Car Deal Hub - Blog{% endblock %}
+
+{% block content %}
+    <!-- Header -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Our Blog</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Stay updated with the latest automotive news, tips, and trends.</p>
+        </div>
+    </section>
+    
+    <!-- Blog Posts -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog Post 1 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:scale-105">
+                    <img src="{{ url_for('static', filename='images/cars/toyota_default.jpg') }}" alt="EV trends" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">April 25, 2025</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Electric Vehicle Trends in 2025</h3>
+                        <p class="text-gray-600 mb-4">Discover the latest advancements in electric vehicle technology and what it means for car buyers in 2025.</p>
+                        <button class="read-more text-primary font-medium flex items-center">
+                            Read More
+                            <i class="ri-arrow-right-line ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 2 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:scale-105">
+                    <img src="{{ url_for('static', filename='images/cars/maruti_default.jpg') }}" alt="Fuel efficiency" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">April 20, 2025</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Maximizing Fuel Efficiency in Your Car</h3>
+                        <p class="text-gray-600 mb-4">Learn practical tips and maintenance strategies to improve your car's fuel efficiency and save money.</p>
+                        <button class="read-more text-primary font-medium flex items-center">
+                            Read More
+                            <i class="ri-arrow-right-line ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 3 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:scale-105">
+                    <img src="{{ url_for('static', filename='images/cars/hyundai_default.jpg') }}" alt="Car insurance" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">April 15, 2025</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Understanding Car Insurance Options</h3>
+                        <p class="text-gray-600 mb-4">A comprehensive guide to different types of car insurance coverage and how to choose the right one for you.</p>
+                        <button class="read-more text-primary font-medium flex items-center">
+                            Read More
+                            <i class="ri-arrow-right-line ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 4 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:scale-105">
+                    <img src="{{ url_for('static', filename='images/cars/honda_default.jpg') }}" alt="Car maintenance" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">April 10, 2025</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Essential Car Maintenance Tips</h3>
+                        <p class="text-gray-600 mb-4">Keep your vehicle running smoothly with these important maintenance tips that every car owner should know.</p>
+                        <button class="read-more text-primary font-medium flex items-center">
+                            Read More
+                            <i class="ri-arrow-right-line ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 5 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:scale-105">
+                    <img src="{{ url_for('static', filename='images/cars/tata_default.jpg') }}" alt="Financing options" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">April 5, 2025</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Car Financing Options Explained</h3>
+                        <p class="text-gray-600 mb-4">Explore different financing methods to help you make an informed decision when purchasing your next car.</p>
+                        <button class="read-more text-primary font-medium flex items-center">
+                            Read More
+                            <i class="ri-arrow-right-line ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 6 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:scale-105">
+                    <img src="{{ url_for('static', filename='images/cars/kia_default.jpg') }}" alt="Car resale value" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">April 1, 2025</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">How to Maintain Your Car's Resale Value</h3>
+                        <p class="text-gray-600 mb-4">Tips and strategies to help preserve your car's value over time and maximize returns when it's time to sell.</p>
+                        <button class="read-more text-primary font-medium flex items-center">
+                            Read More
+                            <i class="ri-arrow-right-line ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="flex justify-center mt-12">
+                <div class="flex space-x-1">
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white">1</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">2</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">3</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">...</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">10</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-700">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter Signup -->
+    <section class="py-12 bg-primary text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+                <p class="mb-6">Get the latest automotive news, tips, and exclusive offers delivered straight to your inbox.</p>
+                <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                    <input type="email" placeholder="Enter your email" class="bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 px-4 py-3 rounded-lg flex-grow focus:outline-none focus:ring-2 focus:ring-white">
+                    <button type="submit" class="bg-white text-primary font-medium px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Blog post interaction
+        const readMoreButtons = document.querySelectorAll('.read-more');
+        
+        readMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const postTitle = this.closest('.p-6').querySelector('h3').textContent;
+                alert(`Full article for "${postTitle}" would open here.`);
+            });
+        });
+    });
+</script>
+{% endblock %}

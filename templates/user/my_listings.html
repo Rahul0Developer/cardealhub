@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}My Listings - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap">
+                <!-- Sidebar -->
+                <div class="w-full lg:w-1/4 mb-8 lg:mb-0 lg:pr-8">
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-6 bg-gray-50 border-b border-gray-200">
+                            <h2 class="text-lg font-bold text-gray-900">My Account</h2>
+                        </div>
+                        <div class="divide-y divide-gray-200">
+                            <a href="{{ url_for('user.dashboard') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-dashboard-line mr-2"></i> Dashboard
+                            </a>
+                            <a href="{{ url_for('user.my_listings') }}" class="block px-6 py-4 text-primary font-medium bg-primary-light">
+                                <i class="ri-file-list-3-line mr-2"></i> My Listings
+                            </a>
+                            <a href="{{ url_for('user.liked_cars') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-heart-line mr-2"></i> Liked Cars
+                            </a>
+                            <a href="{{ url_for('transaction.transactions_history') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-exchange-dollar-line mr-2"></i> Transactions
+                            </a>
+                            <a href="{{ url_for('user.prediction_history') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-line-chart-line mr-2"></i> Prediction History
+                            </a>
+                            <a href="{{ url_for('user.profile') }}" class="block px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="ri-user-settings-line mr-2"></i> Profile Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="w-full lg:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-900">My Car Listings</h1>
+                        <a href="{{ url_for('list_car') }}" class="btn-primary">
+                            <i class="ri-add-line mr-1"></i> List New Car
+                        </a>
+                    </div>
+                    
+                    {% if pagination.items %}
+                        <!-- Car Listings Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {% for car_data in pagination.items %}
+                                {% set car = car_data[0] %}
+                                {% set likes_count = car_data[1] %}
+                                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                                    <!-- Car Image -->
+                                    <div class="h-48 relative bg-gray-200">
+                                        {% if car.image_path %}
+                                            <img src="{{ url_for('static', filename='images/cars/' + car.image_path.split('/')[-1]) }}" alt="{{ car.name }}" class="h-full w-full object-cover">
+                                        {% else %}
+                                            <div class="h-full w-full flex items-center justify-center text-gray-400">
+                                                <i class="ri-car-line text-5xl"></i>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <!-- Status Badge -->
+                                        {% set status = car.status %}
+                                        {% if status and status.is_sold %}
+                                            <div class="absolute top-3 right-3 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Sold</div>
+                                        {% elif status and status.is_approved %}
+                                            <div class="absolute top-3 right-3 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Active</div>
+                                        {% else %}
+                                            <div class="absolute top-3 right-3 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">Pending Approval</div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Car Details -->
+                                    <div class="p-4">
+                                        <h2 class="font-bold text-gray-900 text-lg mb-1">{{ car.company }} {{ car.name }}</h2>
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <p class="text-gray-600 text-sm mb-1">{{ car.year }} • {{ car.fuel_type }}</p>
+                                                <p class="text-gray-600 text-sm">{{ "{:,}".format(car.kms_driven) }} km</p>
+                                            </div>
+                                            <p class="text-primary font-bold">₹{{ "{:,}".format(car.price) }}</p>
+                                        </div>
+                                        
+                                        <!-- Likes Count -->
+                                        <div class="mt-3 flex items-center text-gray-500 text-sm">
+                                            <i class="ri-heart-fill text-red-500 mr-1"></i>
+                                            <span>{{ likes_count }} {% if likes_count == 1 %}person{% else %}people{% endif %} like this</span>
+                                        </div>
+                                        
+                                        <!-- Created At -->
+                                        <div class="text-gray-500 text-xs mt-2">
+                                            Listed on {{ car.created_at.strftime('%d %b, %Y') }}
+                                        </div>
+                                        
+                                        <!-- Actions -->
+                                        <div class="mt-4 flex space-x-2">
+                                            <a href="{{ url_for('list_car', edit=car.id) }}" class="btn-secondary-sm flex-1 text-center">
+                                                <i class="ri-edit-line mr-1"></i> Edit
+                                            </a>
+                                            
+                                            <button type="button" onclick="openDeleteModal({{ car.id }}, '{{ car.company }} {{ car.name }}')" class="btn-danger-sm flex-1">
+                                                <i class="ri-delete-bin-line mr-1"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Pagination -->
+                        {% if pagination.pages > 1 %}
+                            <div class="mt-8 flex justify-center">
+                                <nav class="flex items-center">
+                                    {% if pagination.has_prev %}
+                                        <a href="{{ url_for('user.my_listings', page=pagination.prev_num) }}" class="px-3 py-2 mr-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                            <i class="ri-arrow-left-s-line"></i>
+                                        </a>
+                                    {% else %}
+                                        <span class="px-3 py-2 mr-1 border border-gray-200 rounded-md text-gray-400 cursor-not-allowed">
+                                            <i class="ri-arrow-left-s-line"></i>
+                                        </span>
+                                    {% endif %}
+                                    
+                                    {% for page in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                        {% if page %}
+                                            {% if page == pagination.page %}
+                                                <span class="px-3 py-2 mx-1 border border-primary bg-primary text-white rounded-md">{{ page }}</span>
+                                            {% else %}
+                                                <a href="{{ url_for('user.my_listings', page=page) }}" class="px-3 py-2 mx-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">{{ page }}</a>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="px-3 py-2 mx-1 text-gray-700">…</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if pagination.has_next %}
+                                        <a href="{{ url_for('user.my_listings', page=pagination.next_num) }}" class="px-3 py-2 ml-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                            <i class="ri-arrow-right-s-line"></i>
+                                        </a>
+                                    {% else %}
+                                        <span class="px-3 py-2 ml-1 border border-gray-200 rounded-md text-gray-400 cursor-not-allowed">
+                                            <i class="ri-arrow-right-s-line"></i>
+                                        </span>
+                                    {% endif %}
+                                </nav>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <!-- Empty State -->
+                        <div class="bg-white rounded-lg shadow-sm p-8 text-center">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-2xl mx-auto mb-4">
+                                <i class="ri-car-line"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">No listings yet</h3>
+                            <p class="text-gray-600 mb-6">You haven't created any car listings yet. List your first car now!</p>
+                            <a href="{{ url_for('list_car') }}" class="btn-primary">
+                                <i class="ri-add-line mr-1"></i> List New Car
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900">Delete Car Listing</h3>
+                <p class="text-gray-600 mt-1">Are you sure you want to delete <span id="deleteCarName" class="font-medium"></span>?</p>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-700 mb-4">This action cannot be undone. This will permanently delete the car listing.</p>
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="btn-outline" onclick="closeDeleteModal()">Cancel</button>
+                    <form id="deleteForm" method="post" action="">
+                        <button type="submit" class="btn-danger">Delete Car</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function openDeleteModal(carId, carName) {
+            // Set car name in modal
+            document.getElementById('deleteCarName').textContent = carName;
+            
+            // Set delete form action
+            document.getElementById('deleteForm').action = `/user/my-listings/delete/${carId}`;
+            
+            // Show modal
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+    </script>
+{% endblock %}

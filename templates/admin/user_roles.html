@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+
+{% block title %}User Role Management - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Admin Dashboard Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">User Role Management</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Manage user roles and permissions across the platform.</p>
+        </div>
+    </section>
+    
+    <!-- Admin Nav -->
+    <section class="py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <nav class="flex overflow-x-auto whitespace-nowrap pb-2">
+                <a href="{{ url_for('admin.dashboard') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Dashboard</a>
+                <a href="{{ url_for('admin.listings') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Listings</a>
+                <a href="{{ url_for('admin.transactions') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Transactions</a>
+                <a href="{{ url_for('admin.users') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Users</a>
+                <a href="{{ url_for('admin.user_roles') }}" class="px-4 py-2 font-medium text-primary border-b-2 border-primary mr-4">User Roles</a>
+                <a href="{{ url_for('admin.reports') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary">Reports</a>
+            </nav>
+        </div>
+    </section>
+    
+    <!-- User Roles Management -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3 sm:mb-0">User Roles</h3>
+                        <div class="flex gap-2">
+                            <a href="{{ url_for('admin.export_data', data_type='users') }}" class="btn-secondary text-sm px-3 py-1.5">
+                                <i class="ri-download-2-line mr-1"></i> Export Users
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search Form -->
+                <div class="p-6 border-b border-gray-200 bg-gray-50">
+                    <form method="get" action="{{ url_for('admin.user_roles') }}" class="max-w-lg">
+                        <div class="flex gap-2">
+                            <div class="relative flex-grow">
+                                <input type="text" name="search" value="{{ search }}" placeholder="Search by username or email" class="form-input pr-10 pl-10 w-full">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="ri-search-line text-gray-400"></i>
+                                </div>
+                                {% if search %}
+                                    <a href="{{ url_for('admin.user_roles') }}" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600">
+                                        <i class="ri-close-line"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <button type="submit" class="btn-primary px-4">Search</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Users Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">User ID</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Username</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Email</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Current Role</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Joined</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr class="border-t border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4 text-gray-800">{{ user.id }}</td>
+                                    <td class="py-3 px-4 text-gray-800">{{ user.username }}</td>
+                                    <td class="py-3 px-4 text-gray-800">{{ user.email }}</td>
+                                    <td class="py-3 px-4">
+                                        {% if user.is_admin %}
+                                            <span class="px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-700">Admin</span>
+                                        {% elif user.is_verified %}
+                                            <span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-700">Verified Seller</span>
+                                        {% else %}
+                                            <span class="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-700">Basic User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-600">{{ user.created_at.strftime('%d %b, %Y') }}</td>
+                                    <td class="py-3 px-4">
+                                        {% if user.id != current_user.id %}
+                                            <button class="text-primary hover:underline text-sm" onclick="openRoleModal({{ user.id }}, '{{ user.username }}')">
+                                                <i class="ri-shield-user-line mr-1"></i> Change Role
+                                            </button>
+                                        {% else %}
+                                            <span class="text-gray-400 text-sm">Cannot change own role</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr class="border-t border-gray-200">
+                                    <td colspan="6" class="py-4 px-4 text-center text-gray-500">
+                                        No users found matching your criteria.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if pagination.pages > 1 %}
+                    <div class="p-4 border-t border-gray-200 flex justify-center">
+                        <nav class="flex items-center">
+                            {% if pagination.has_prev %}
+                                <a href="{{ url_for('admin.user_roles', page=pagination.prev_num, search=search) }}" class="px-3 py-2 mr-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                    <i class="ri-arrow-left-s-line"></i>
+                                </a>
+                            {% else %}
+                                <span class="px-3 py-2 mr-1 border border-gray-200 rounded-md text-gray-400 cursor-not-allowed">
+                                    <i class="ri-arrow-left-s-line"></i>
+                                </span>
+                            {% endif %}
+                            
+                            {% for page in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                {% if page %}
+                                    {% if page == pagination.page %}
+                                        <span class="px-3 py-2 mx-1 border border-primary bg-primary text-white rounded-md">{{ page }}</span>
+                                    {% else %}
+                                        <a href="{{ url_for('admin.user_roles', page=page, search=search) }}" class="px-3 py-2 mx-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">{{ page }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="px-3 py-2 mx-1 text-gray-700">…</span>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if pagination.has_next %}
+                                <a href="{{ url_for('admin.user_roles', page=pagination.next_num, search=search) }}" class="px-3 py-2 ml-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </a>
+                            {% else %}
+                                <span class="px-3 py-2 ml-1 border border-gray-200 rounded-md text-gray-400 cursor-not-allowed">
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </span>
+                            {% endif %}
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Role Descriptions -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Role Descriptions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center mb-3">
+                            <div class="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="ri-user-line text-lg text-blue-600"></i>
+                            </div>
+                            <h4 class="font-medium text-gray-900">Basic User</h4>
+                        </div>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Browse car listings
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Use price prediction
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Purchase cars
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-close-line text-red-500 mr-2"></i>
+                                List cars for sale without approval
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center mb-3">
+                            <div class="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="ri-user-star-line text-lg text-green-600"></i>
+                            </div>
+                            <h4 class="font-medium text-gray-900">Verified Seller</h4>
+                        </div>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                All basic user capabilities
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                List cars for sale with faster approval
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Get seller verification badge
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Enhanced visibility in listings
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center mb-3">
+                            <div class="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="ri-admin-line text-lg text-purple-600"></i>
+                            </div>
+                            <h4 class="font-medium text-gray-900">Admin</h4>
+                        </div>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                All verified seller capabilities
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Access to admin dashboard
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Approve/reject car listings
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ri-check-line text-green-500 mr-2"></i>
+                                Manage users and transactions
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Change Role Modal -->
+    <div id="roleModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900">Change User Role</h3>
+                <p class="text-gray-600 mt-1" id="roleModalSubtitle">Update permissions for <span id="roleModalUsername"></span></p>
+            </div>
+            <form id="roleForm" method="post" action="">
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <input type="radio" id="role-basic" name="role" value="basic_user" class="form-radio">
+                            <label for="role-basic" class="ml-3 flex items-center">
+                                <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                    <i class="ri-user-line text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">Basic User</p>
+                                    <p class="text-sm text-gray-600">Browse and purchase cars</p>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" id="role-verified" name="role" value="verified_seller" class="form-radio">
+                            <label for="role-verified" class="ml-3 flex items-center">
+                                <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center mr-2">
+                                    <i class="ri-user-star-line text-green-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">Verified Seller</p>
+                                    <p class="text-sm text-gray-600">Trusted seller with additional privileges</p>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" id="role-admin" name="role" value="admin" class="form-radio">
+                            <label for="role-admin" class="ml-3 flex items-center">
+                                <div class="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center mr-2">
+                                    <i class="ri-admin-line text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">Admin</p>
+                                    <p class="text-sm text-gray-600">Full platform administration rights</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end gap-3">
+                    <button type="button" class="btn-outline" onclick="closeRoleModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Update Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function openRoleModal(userId, username) {
+            // Set user info in modal
+            document.getElementById('roleModalUsername').textContent = username;
+            
+            // Set form action
+            document.getElementById('roleForm').action = "{{ url_for('admin.update_user_role', user_id=0) }}".replace('0', userId);
+            
+            // Show modal
+            document.getElementById('roleModal').classList.remove('hidden');
+        }
+        
+        function closeRoleModal() {
+            document.getElementById('roleModal').classList.add('hidden');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('roleModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRoleModal();
+            }
+        });
+    </script>
+{% endblock %}

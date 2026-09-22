@@ -1,0 +1,107 @@
+Updated User Dashboard for CarDealHub
+🔥 Common Dashboard Features (for All Users)
+Welcome Message: “Hello, [User Name]! Let’s find your perfect deal.”
+
+Profile Summary: View/Edit basic details (name, email, phone)
+
+Notifications: New offers, listing status updates, inquiry messages
+
+Quick Actions Buttons:
+
+Predict Your Car’s Price
+
+Browse Marketplace
+
+List a New Car
+
+🛒 Buyer Dashboard Section
+Saved Listings:
+
+View and manage favorite cars
+
+Remove from saved list
+
+Purchase History:
+
+Cars purchased with payment and transaction status
+
+Download payment receipts
+
+Smart Match Recommendations:
+
+AI-suggested listings based on budget/location preferences
+
+Prediction History:
+
+See a list of past car price predictions made
+
+Option to revisit listings or list a car directly
+
+Recently Viewed Cars:
+
+Browse history auto-saved for easier revisit
+
+🏷️ Seller Dashboard Section (Updated)
+My Listings:
+
+Grid or table view showing:
+
+Car Image
+
+Title (Brand + Model)
+
+Price
+
+Status (Active / Pending Approval / Sold)
+
+Edit Listing:
+
+Button to edit car details (price, mileage, description, images)
+
+❌ Delete Listing (New Feature):
+
+Delete Button next to each active listing
+
+Confirmation popup: "Are you sure you want to delete this listing?"
+
+Soft delete (recommended): Mark listing as deleted in DB but keep for history
+
+Optional: Hard delete (fully remove from DB)
+
+Add New Listing:
+
+Button to quickly create and upload a new car listing
+
+Listing Insights:
+
+Number of views, inquiries, average price suggestions
+
+Buyer Inquiries:
+
+Message center to manage incoming queries
+
+Boost My Listing Tips:
+
+Suggest uploading better images, using 360° view, etc.
+
+⚙️ Technical Handling (Delete Listing)
+API Endpoint:
+
+DELETE /api/listings/:id — Authenticated user can delete their own listing only
+
+Safety Check:
+
+Verify user owns the listing (seller_id == current_user.id) before allowing delete
+
+Frontend:
+
+Add "Delete" button with confirmation modal
+
+On success, remove the listing from UI dynamically without full page reload
+
+📈 Dashboard Widgets and Charts (Optional Enhancement)
+Listing performance (views, inquiries)
+
+Sold listings vs active listings pie chart
+
+Most popular car brands among user’s buyers

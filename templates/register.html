@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Register Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Create an Account</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Join Car Deal Hub to list your cars, save favorites, and get personalized recommendations.</p>
+        </div>
+    </section>
+    
+    <!-- Register Form -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto bg-white rounded-lg shadow-sm p-6 md:p-8">
+                <form id="register-form" action="/register" method="post">
+                    <div class="mb-4">
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input type="text" id="username" name="username" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="password" name="password" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required>
+                        <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters long and include a mix of letters, numbers, and special characters.</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="terms" required>
+                            <span class="checkmark mr-2"></span>
+                            <span class="text-sm text-gray-600">I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a></span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-button font-medium mb-4">Create Account</button>
+                    
+                    <p class="text-center text-gray-600">
+                        Already have an account? <a href="/login" class="text-primary hover:underline">Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Why Join Car Deal Hub?</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Discover the advantages of being a member of our community.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="flex">
+                    <div class="mr-4 flex-shrink-0">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="ri-price-tag-3-line text-primary text-xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Smart Price Predictions</h3>
+                        <p class="text-gray-600">Get accurate price estimates for your car based on market data and machine learning algorithms.</p>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="mr-4 flex-shrink-0">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="ri-shield-check-line text-secondary text-xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Verified Listings</h3>
+                        <p class="text-gray-600">Browse through verified car listings with detailed information to make informed decisions.</p>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="mr-4 flex-shrink-0">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="ri-chat-3-line text-red-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Direct Communication</h3>
+                        <p class="text-gray-600">Connect directly with buyers or sellers through our secure messaging system.</p>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="mr-4 flex-shrink-0">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i class="ri-line-chart-line text-yellow-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Market Insights</h3>
+                        <p class="text-gray-600">Access detailed market trends and insights to help you make better buying or selling decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const registerForm = document.getElementById('register-form');
+        
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                // Clear previous error messages
+                const errorMessages = document.querySelectorAll('.error-message');
+                errorMessages.forEach(message => message.remove());
+                
+                // Validate password
+                if (password.length < 8) {
+                    e.preventDefault();
+                    showError('password', 'Password must be at least 8 characters long');
+                }
+                
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    showError('confirm_password', 'Passwords do not match');
+                }
+            });
+        }
+        
+        // Show error message for form field
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message text-red-500 text-sm mt-1';
+            errorDiv.textContent = message;
+            field.parentNode.appendChild(errorDiv);
+        }
+    });
+</script>
+{% endblock %}

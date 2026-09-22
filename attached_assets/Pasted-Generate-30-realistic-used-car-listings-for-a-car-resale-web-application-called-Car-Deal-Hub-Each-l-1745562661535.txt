@@ -1,0 +1,125 @@
+Generate 30 realistic used car listings for a car resale web application called Car Deal Hub. Each listing should include realistic data and a high-resolution image of the car. Focus on popular Indian car brands and models. These listings will serve as sample/demo content for the platform's frontend and backend.
+
+📋 Listing Details (Per Car):
+Include the following fields for each listing:
+
+Car Name: (e.g., Mahindra Thar LX, Toyota Fortuner 2.8 Sigma)
+
+Brand: Mahindra, Toyota, Maruti, Hyundai, Tata, Honda, Kia, Renault, MG, etc.
+
+Model: Exact variant (e.g., Creta SX, Nexon XZ+)
+
+Model Year: Random year between 2016–2023
+
+Fuel Type: Petrol / Diesel
+
+Transmission: Manual / Automatic
+
+KMs Driven: Between 20,000 – 100,000
+
+Mileage (kmpl): Realistic approximate value (e.g., 16.5 kmpl)
+
+Color: Common shades like White, Black, Silver, Red, Grey, Blue, Orange
+
+Location: Randomly selected from Indian cities (e.g., Delhi, Mumbai, Bangalore, Pune, Hyderabad, Jaipur, Chennai, Kolkata, Lucknow, Ahmedabad, etc.)
+
+Price (INR): ₹3,00,000 – ₹18,00,000 depending on make/model/condition
+
+Condition: Excellent / Good / Fair
+
+Description: 2–3 lines highlighting key features, owner type, documents, comfort, maintenance, service history, or standout traits
+
+Seller Name: Fake but realistic Indian name (e.g., Rohit Sharma, Nikhil Jain, Priya Mehta)
+
+Contact Info: Dummy masked phone/email (e.g., 98XXXXXXXX / carhub@example.com)
+
+Image Path/URL: Must be a valid .png, .jpg, or .jpeg file path like /static/images/cars/brand_model_year_color.jpg
+
+📁 Image Requirements:
+Resolution: Minimum 800×600 pixels
+
+Format: .png, .jpg, or .jpeg
+
+Style: Realistic and clean exterior images of Indian cars (not stock international models)
+
+Angle: Preferably ¾ front view with good lighting
+
+Bonus: Optional interior shot or car document scan
+
+Naming Convention:
+Format: brand_model_year_color.jpg
+Example: mahindra_thar_2021_black.jpg
+
+🧪 Sample Cars to Include (Base 10):
+Ensure the following base models are included in your list:
+
+Mahindra Thar LX
+
+Toyota Fortuner 2.8 Sigma
+
+Maruti Swift VXi
+
+Hyundai Creta SX
+
+Tata Nexon XZ+
+
+Honda City ZX
+
+Kia Seltos HTX
+
+Renault Kwid Climber
+
+Maruti Baleno Zeta
+
+MG Hector Sharp
+
+➕ Additional Cars (Newly Added Suggestions):
+Tata Harrier XT+
+
+Hyundai Venue SX Turbo
+
+Toyota Innova Crysta GX
+
+Maruti Vitara Brezza ZDi+
+
+Ford EcoSport Titanium
+
+Volkswagen Polo GT TSI
+
+Nissan Magnite XV Premium
+
+Skoda Kushaq Ambition
+
+Jeep Compass Longitude
+
+Honda Amaze VX CVT
+
+Hyundai i20 Sportz
+
+Tata Tiago XZ+
+
+Maruti Ciaz Alpha
+
+Mahindra XUV300 W8
+
+MG Astor Super
+
+Renault Triber RXZ
+
+Maruti Ertiga ZXi
+
+Kia Carens Prestige
+
+Tata Punch Creative
+
+Hyundai Alcazar Platinum
+
+Let me know if you want:
+
+This as a .txt or .docx prompt template file
+
+A JSON/CSV version of the listings
+
+AI-generated car images for these
+
+Auto-import code to seed these into your Flask+SQL/MySQL app

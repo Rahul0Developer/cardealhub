@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+
+{% block title %}Car Deal Hub - Frequently Asked Questions{% endblock %}
+
+{% block content %}
+    <!-- Header -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Find answers to common questions about buying, selling, and using Car Deal Hub.</p>
+        </div>
+    </section>
+    
+    <!-- FAQ Categories -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Category Tabs -->
+                <div class="flex flex-wrap border-b border-gray-200 mb-8">
+                    <button class="faq-tab p-4 font-medium text-gray-900 hover:text-primary border-b-2 border-primary" data-category="general">General</button>
+                    <button class="faq-tab p-4 font-medium text-gray-500 hover:text-primary border-b-2 border-transparent" data-category="buying">Buying</button>
+                    <button class="faq-tab p-4 font-medium text-gray-500 hover:text-primary border-b-2 border-transparent" data-category="selling">Selling</button>
+                    <button class="faq-tab p-4 font-medium text-gray-500 hover:text-primary border-b-2 border-transparent" data-category="account">Account</button>
+                    <button class="faq-tab p-4 font-medium text-gray-500 hover:text-primary border-b-2 border-transparent" data-category="payments">Payments</button>
+                </div>
+                
+                <!-- Search Box -->
+                <div class="mb-8">
+                    <div class="relative">
+                        <input type="text" id="faq-search" placeholder="Search for questions..." 
+                              class="w-full px-4 py-3 pl-12 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary">
+                        <i class="ri-search-line absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- FAQ Content -->
+                <div class="space-y-4">
+                    <!-- General FAQs -->
+                    <div class="faq-category" id="general-faqs">
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">What is Car Deal Hub?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Car Deal Hub is a comprehensive online platform that connects car buyers and sellers. We provide tools for price prediction, car listings, and market analysis to make the buying and selling process transparent and efficient. Our platform helps users make informed decisions with accurate car valuations based on market data.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">Is Car Deal Hub available nationwide?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Yes, Car Deal Hub is available across all major cities and regions in India. Our platform allows you to search for cars by location, making it easy to find vehicles in your area. We're continuously expanding our coverage to include more regions and provide better service to all users.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">How accurate are the price predictions?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Our price predictions use advanced machine learning algorithms trained on extensive historical car sales data. The predictions are typically within 5-10% of actual market prices. Factors like car condition, service history, and local market variations can influence the final price. We continuously update our models to improve accuracy.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Buying FAQs -->
+                    <div class="faq-category hidden" id="buying-faqs">
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">How do I contact a car seller?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    To contact a seller, simply click the "Contact Seller" button on any car listing. You'll be able to send a message directly through our platform. If you're logged in, your contact information will be automatically included, or you can choose to enter it manually. The seller will receive your inquiry and respond via email or phone as per their preference.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">Can I get a vehicle history report?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    While Car Deal Hub doesn't directly provide vehicle history reports, we recommend asking the seller for service records and considering a third-party service like CarInfo or VAHAN for a comprehensive vehicle history check. This report can show past accidents, service history, ownership changes, and other vital information before making a purchase decision.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">Should I get a pre-purchase inspection?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Yes, we highly recommend getting a pre-purchase inspection from a qualified mechanic before finalizing any used car purchase. Even cars that look perfect can have hidden mechanical issues that only a professional can identify. The cost of an inspection (typically ₹1,000-₹3,000) is a small price to pay compared to potential repair costs down the road.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Selling FAQs -->
+                    <div class="faq-category hidden" id="selling-faqs">
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">How do I list my car for sale?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Listing your car is simple. Click on "List Your Car" in the navigation menu, create an account if you don't already have one, and fill out the listing form with details about your vehicle. Include clear photos from multiple angles, a detailed description, and your asking price. Once submitted, our team will review the listing, and it should be live within 24 hours.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">How long will it take to sell my car?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Selling time varies based on factors like car condition, price, demand for the model, and location. Popular models priced competitively typically sell within 2-3 weeks. Luxury vehicles or uncommon models may take longer. Ensure your listing has quality photos, a detailed description, and a competitive price based on our prediction tool to maximize your chances of a quick sale.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">What documents do I need to sell my car?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    To sell your car legally, you'll need:
+                                </p>
+                                <ul class="list-disc pl-5 mt-2 space-y-1 text-gray-700">
+                                    <li>Original Registration Certificate (RC)</li>
+                                    <li>Valid insurance policy</li>
+                                    <li>PUC (Pollution Under Control) certificate</li>
+                                    <li>Service history and maintenance records</li>
+                                    <li>Form 28, 29, 30 (available at your local RTO)</li>
+                                    <li>Bill of sale/receipt</li>
+                                    <li>NOC (No Objection Certificate) if the vehicle is registered in a different state</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account FAQs -->
+                    <div class="faq-category hidden" id="account-faqs">
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">How do I create an account?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Creating an account is easy. Click the "Register" button in the top navigation, enter your email address, choose a username and password, and complete the registration form. You'll receive a verification email to confirm your account. Once verified, you can log in and access all features, including saving favorite cars, listing your own vehicles, and tracking your price predictions.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">How do I reset my password?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    If you've forgotten your password, click the "Login" button, then select the "Forgot Password" link below the login form. Enter the email address associated with your account, and we'll send you a password reset link. Click the link in the email and follow the instructions to create a new password. For security reasons, the reset link expires after 24 hours.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">Can I delete my account?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Yes, you can delete your account at any time. Go to your account settings, scroll to the bottom, and click the "Delete Account" button. You'll be asked to confirm your decision. Please note that account deletion is permanent and removes all your data, including saved cars, listings, and prediction history. If you have active listings, they will be removed from the marketplace.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payments FAQs -->
+                    <div class="faq-category hidden" id="payments-faqs">
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">Is it free to list a car?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    Yes, basic car listings are completely free on Car Deal Hub. You can list your vehicle with photos and all details at no cost. We also offer premium listing options for a small fee, which include highlighted placement, featured status on the homepage, and extended listing duration. These paid features can help your car sell faster by increasing its visibility.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">What payment methods are accepted?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    For premium services, we accept all major credit and debit cards, UPI payments, net banking, and popular digital wallets. All transactions are processed securely through our payment gateway. For car transactions between buyers and sellers, we recommend secure payment methods like bank transfers or demand drafts, and we advise against cash payments for large amounts.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none text-left">
+                                <span class="font-medium text-gray-900">Does Car Deal Hub handle payments between buyers and sellers?</span>
+                                <i class="ri-add-line text-gray-500 accordion-icon"></i>
+                            </button>
+                            <div class="p-4 border-t bg-white hidden accordion-content">
+                                <p class="text-gray-700">
+                                    No, Car Deal Hub does not handle or process payments between buyers and sellers. We are a platform that connects parties, but all financial transactions for vehicle purchases occur directly between the buyer and seller. We recommend following secure payment practices and completing proper documentation during the sale process. Always meet in person to exchange documents and complete the transaction.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- No Results Message -->
+                    <div id="no-results-message" class="hidden py-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center bg-gray-100 rounded-full">
+                            <i class="ri-search-line text-gray-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">No Results Found</h3>
+                        <p class="text-gray-600">We couldn't find any questions matching your search.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Still Have Questions -->
+    <section class="py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Still Have Questions?</h2>
+            <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+                If you couldn't find the answer you were looking for, our support team is here to help.
+            </p>
+            <a href="{{ url_for('contact') }}" class="inline-block bg-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors">
+                Contact Support
+            </a>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Tab Switching
+        const faqTabs = document.querySelectorAll('.faq-tab');
+        const faqCategories = document.querySelectorAll('.faq-category');
+        
+        faqTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                
+                // Update active tab
+                faqTabs.forEach(t => {
+                    t.classList.remove('text-gray-900', 'border-primary');
+                    t.classList.add('text-gray-500', 'border-transparent');
+                });
+                this.classList.remove('text-gray-500', 'border-transparent');
+                this.classList.add('text-gray-900', 'border-primary');
+                
+                // Show selected category
+                faqCategories.forEach(cat => {
+                    cat.classList.add('hidden');
+                });
+                document.getElementById(category + '-faqs').classList.remove('hidden');
+                
+                // Clear search if any
+                document.getElementById('faq-search').value = '';
+                document.getElementById('no-results-message').classList.add('hidden');
+                
+                // Reset all accordion items
+                const allAccordionContents = document.querySelectorAll('.accordion-content');
+                const allAccordionIcons = document.querySelectorAll('.accordion-icon');
+                
+                allAccordionContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                allAccordionIcons.forEach(icon => {
+                    icon.classList.remove('ri-subtract-line');
+                    icon.classList.add('ri-add-line');
+                });
+            });
+        });
+        
+        // Accordion functionality
+        const accordionButtons = document.querySelectorAll('.accordion-item button');
+        
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('.accordion-icon');
+                
+                // Toggle current item
+                content.classList.toggle('hidden');
+                
+                // Change icon
+                if (content.classList.contains('hidden')) {
+                    icon.classList.remove('ri-subtract-line');
+                    icon.classList.add('ri-add-line');
+                } else {
+                    icon.classList.remove('ri-add-line');
+                    icon.classList.add('ri-subtract-line');
+                }
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('faq-search');
+        const noResultsMessage = document.getElementById('no-results-message');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            const allQuestions = document.querySelectorAll('.accordion-item');
+            let matchFound = false;
+            
+            // If search is empty, reset to default view
+            if (searchTerm === '') {
+                // Show currently active category
+                faqCategories.forEach(cat => {
+                    if (!cat.classList.contains('hidden')) {
+                        const items = cat.querySelectorAll('.accordion-item');
+                        items.forEach(item => {
+                            item.style.display = 'block';
+                        });
+                    }
+                });
+                
+                noResultsMessage.classList.add('hidden');
+                return;
+            }
+            
+            // Search across all categories
+            allQuestions.forEach(item => {
+                const questionText = item.querySelector('button span').textContent.toLowerCase();
+                const answerText = item.querySelector('.accordion-content').textContent.toLowerCase();
+                
+                if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    matchFound = true;
+                    
+                    // Show category containing matches
+                    const parentCategory = item.closest('.faq-category');
+                    faqCategories.forEach(cat => {
+                        cat.classList.add('hidden');
+                    });
+                    parentCategory.classList.remove('hidden');
+                    
+                    // Update active tab
+                    const categoryId = parentCategory.id.replace('-faqs', '');
+                    faqTabs.forEach(tab => {
+                        const tabCategory = tab.getAttribute('data-category');
+                        if (tabCategory === categoryId) {
+                            tab.classList.remove('text-gray-500', 'border-transparent');
+                            tab.classList.add('text-gray-900', 'border-primary');
+                        } else {
+                            tab.classList.remove('text-gray-900', 'border-primary');
+                            tab.classList.add('text-gray-500', 'border-transparent');
+                        }
+                    });
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Show no results message if needed
+            if (!matchFound) {
+                noResultsMessage.classList.remove('hidden');
+                faqCategories.forEach(cat => {
+                    cat.classList.add('hidden');
+                });
+            } else {
+                noResultsMessage.classList.add('hidden');
+            }
+        });
+    });
+</script>
+{% endblock %}

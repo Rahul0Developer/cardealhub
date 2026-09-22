@@ -1,0 +1,628 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if car %}Edit Your Car Listing{% else %}List Your Car{% endif %} - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- List Car Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">{% if car %}Edit Your Car Listing{% else %}List Your Car{% endif %}</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">{% if car %}Update your car listing information to keep it accurate and attractive to potential buyers.{% else %}Provide details about your car to list it on our marketplace and connect with potential buyers.{% endif %}</p>
+        </div>
+    </section>
+    
+    <!-- List Car Form -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6 md:p-8">
+                {% if not current_user.is_authenticated %}
+                <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-6">
+                    <p>You need to <a href="/login" class="font-bold underline">log in</a> to list your car. Don't have an account? <a href="/register" class="font-bold underline">Register now</a>.</p>
+                </div>
+                {% endif %}
+                
+                <form id="list-car-form" action="/list-car" method="post" enctype="multipart/form-data">
+                    <!-- WTF CSRF protection -->
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <!-- Hidden fields for edit mode -->
+                    {% if car %}
+                        <input type="hidden" name="edit_id" value="{{ car.id }}">
+                    {% endif %}
+                    <!-- Car Information Section -->
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Car Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Car Name/Model</label>
+                            <input type="text" id="name" name="name" placeholder="e.g. Swift Dzire VXi" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} value="{{ car.name if car else '' }}" required>
+                        </div>
+                        
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Car Brand</label>
+                            <div class="relative">
+                                <select id="company" name="company" class="w-full appearance-none bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 pr-8 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} required>
+                                    <option value="">Select Brand</option>
+                                    {% for brand in brands %}
+                                    <option value="{{ brand }}">{{ brand }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700 dark:text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="year" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Year</label>
+                            <div class="relative">
+                                <select id="year" name="year" class="w-full appearance-none bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 pr-8 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} required>
+                                    <option value="">Select Year</option>
+                                    {% for year in years %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700 dark:text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price (₹)</label>
+                            <input type="number" id="price" name="price" placeholder="e.g. 450000" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} value="{{ car.price if car else '' }}" required>
+                        </div>
+                        
+                        <div>
+                            <label for="kms_driven" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kilometers Driven</label>
+                            <input type="number" id="kms_driven" name="kms_driven" placeholder="e.g. 45000" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} value="{{ car.kms_driven if car else '' }}" required>
+                        </div>
+                        
+                        <div>
+                            <label for="fuel_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fuel Type</label>
+                            <div class="relative">
+                                <select id="fuel_type" name="fuel_type" class="w-full appearance-none bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 pr-8 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} required>
+                                    <option value="">Select Fuel Type</option>
+                                    {% for fuel_type in fuel_types %}
+                                    <option value="{{ fuel_type }}">{{ fuel_type }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700 dark:text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="transmission" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transmission</label>
+                            <div class="relative">
+                                <select id="transmission" name="transmission" class="w-full appearance-none bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 pr-8 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                                    <option value="">Select Transmission</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Automatic">Automatic</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700 dark:text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="owners" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Number of Previous Owners</label>
+                            <div class="relative">
+                                <select id="owners" name="owners" class="w-full appearance-none bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 pr-8 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                                    <option value="1">1 (First Owner)</option>
+                                    <option value="2">2 (Second Owner)</option>
+                                    <option value="3">3 (Third Owner)</option>
+                                    <option value="4">4+ (Multiple Owners)</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700 dark:text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="color" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Car Color</label>
+                            <input type="text" id="color" name="color" placeholder="e.g. Pearl White" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                        </div>
+                        
+                        <div>
+                            <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Location (City)</label>
+                            <input type="text" id="location" name="location" placeholder="e.g. Mumbai" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                        </div>
+                        
+                        <div>
+                            <label for="condition" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Car Condition</label>
+                            <div class="relative">
+                                <select id="condition" name="condition" class="w-full appearance-none bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 pr-8 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                                    <option value="">Select Condition</option>
+                                    <option value="Excellent">Excellent - Like New</option>
+                                    <option value="Very Good">Very Good - Minor Wear</option>
+                                    <option value="Good">Good - Some Visible Wear</option>
+                                    <option value="Fair">Fair - Noticeable Wear & Tear</option>
+                                    <option value="Poor">Poor - Needs Repairs</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-arrow-down-s-line text-gray-700 dark:text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                            <textarea id="description" name="description" rows="4" placeholder="Describe your car's condition, history, and any other relevant details" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} required>{{ car.description if car else '' }}</textarea>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label for="features" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Features</label>
+                            <textarea id="features" name="features" rows="3" placeholder="List car features separated by commas (e.g., Air Conditioning, Power Steering, Alloy Wheels, Sunroof)" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %}>{{ car.features if car else '' }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Car Images Section -->
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mb-6">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Car Images</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                            <div>
+                                <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Main Image (Primary)</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                            <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary hover:text-indigo-500 focus-within:outline-none">
+                                                <span>Upload a file</span>
+                                                <input id="image" name="image" type="file" accept="image/*" class="sr-only" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                                            PNG, JPG, JPEG up to 5MB
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="image-preview" class="mt-2 hidden">
+                                    <img src="#" alt="Image preview" class="w-full h-32 object-cover rounded">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="image2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Additional Image</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                            <label for="image2" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary hover:text-indigo-500 focus-within:outline-none">
+                                                <span>Upload a file</span>
+                                                <input id="image2" name="image2" type="file" accept="image/*" class="sr-only" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                                            PNG, JPG, JPEG up to 5MB
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="image2-preview" class="mt-2 hidden">
+                                    <img src="#" alt="Image preview" class="w-full h-32 object-cover rounded">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="image3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Additional Image</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                            <label for="image3" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary hover:text-indigo-500 focus-within:outline-none">
+                                                <span>Upload a file</span>
+                                                <input id="image3" name="image3" type="file" accept="image/*" class="sr-only" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                                            PNG, JPG, JPEG up to 5MB
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="image3-preview" class="mt-2 hidden">
+                                    <img src="#" alt="Image preview" class="w-full h-32 object-cover rounded">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+                            Tip: Upload clear photos from different angles to increase your chances of selling.
+                        </p>
+                    </div>
+                    
+                    <!-- Seller Contact Information -->
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mb-6">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Contact Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="contact_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
+                                <input type="text" id="contact_name" name="contact_name" placeholder="e.g. John Doe" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} value="{{ car.contact_name if car else current_user.username if current_user.is_authenticated else '' }}">
+                            </div>
+                            
+                            <div>
+                                <label for="contact_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                                <input type="email" id="contact_email" name="contact_email" placeholder="e.g. your@email.com" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} value="{{ car.contact_email if car else current_user.email if current_user.is_authenticated else '' }}">
+                            </div>
+                            
+                            <div>
+                                <label for="contact_phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                                <input type="tel" id="contact_phone" name="contact_phone" placeholder="e.g. +91 9876543210" class="w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white py-3 px-4 rounded border-none" {% if not current_user.is_authenticated %}disabled{% endif %} value="{{ car.contact_phone if car else '' }}">
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input id="show_phone" name="show_phone" type="checkbox" class="w-4 h-4 text-primary border-gray-300 rounded" checked {% if not current_user.is_authenticated %}disabled{% endif %}>
+                                <label for="show_phone" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                    Show my phone number to potential buyers
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <button type="submit" class="w-full bg-primary text-white py-3 rounded-button font-medium" {% if not current_user.is_authenticated %}disabled{% endif %}>
+                            {% if car %}Update Your Car{% else %}List Your Car{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Edit mode initialization is now handled in the scripts block at the bottom -->
+
+    <!-- Selling Tips -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Tips for Selling Your Car Faster</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Follow these tips to attract more potential buyers and sell your car quickly.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="ri-image-2-line text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Quality Photos</h3>
+                    <p class="text-gray-600">Take clear photos of your car from different angles, including interior and exterior shots.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="ri-price-tag-3-line text-secondary text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Competitive Pricing</h3>
+                    <p class="text-gray-600">Set a fair price based on market value, car condition, and mileage to attract serious buyers.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="ri-file-list-3-line text-yellow-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Detailed Description</h3>
+                    <p class="text-gray-600">Provide a comprehensive description highlighting key features, maintenance history, and any upgrades.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="ri-customer-service-2-line text-red-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Be Responsive</h3>
+                    <p class="text-gray-600">Respond quickly to inquiries and be available for test drives to keep potential buyers interested.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Success Stories</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">See what our users say about selling their cars on Car Deal Hub.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-xl font-bold text-gray-500">R</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">Rahul Singh</h3>
+                            <p class="text-gray-500">Delhi</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"I listed my Honda City on Car Deal Hub and received multiple inquiries within a day. Sold it at a great price within a week!"</p>
+                    <div class="flex text-yellow-400">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-xl font-bold text-gray-500">P</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">Priya Patel</h3>
+                            <p class="text-gray-500">Mumbai</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"The price prediction tool helped me set the right price for my Hyundai i20. Got offers matching my asking price. Highly recommended!"</p>
+                    <div class="flex text-yellow-400">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-half-fill"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-xl font-bold text-gray-500">V</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">Vikram Mehta</h3>
+                            <p class="text-gray-500">Bangalore</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"The process was seamless and straightforward. Listed my Maruti Swift and sold it within 10 days at a fair price. Great platform!"</p>
+                    <div class="flex text-yellow-400">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const listCarForm = document.getElementById('list-car-form');
+        
+        // Initialize image preview functionality
+        setupImagePreviews();
+        
+        // Edit mode initialization
+        {% if car %}
+        // Set select values
+        document.getElementById('company').value = "{{ car.company }}";
+        document.getElementById('year').value = "{{ car.year }}";
+        document.getElementById('fuel_type').value = "{{ car.fuel_type }}";
+        
+        if ("{{ car.transmission }}") {
+            document.getElementById('transmission').value = "{{ car.transmission }}";
+        }
+        
+        if ("{{ car.owners }}") {
+            document.getElementById('owners').value = "{{ car.owners }}";
+        }
+        
+        if ("{{ car.condition }}") {
+            document.getElementById('condition').value = "{{ car.condition }}";
+        }
+        
+        // Set color and location
+        if ("{{ car.color }}") {
+            document.getElementById('color').value = "{{ car.color }}";
+        }
+        
+        if ("{{ car.location }}") {
+            document.getElementById('location').value = "{{ car.location }}";
+        }
+        
+        // Contact details are pre-filled through HTML value attributes
+        
+        // Set phone visibility checkbox
+        document.getElementById('show_phone').checked = {% if car.show_phone %}true{% else %}false{% endif %};
+        
+        // Update submit button text
+        document.querySelector('button[type="submit"]').textContent = "Update Your Car";
+        
+        // Display existing images if available
+        {% if car.image_path %}
+            var imgPreview = document.getElementById('image-preview');
+            imgPreview.classList.remove('hidden');
+            imgPreview.querySelector('img').src = "{{ url_for('static', filename='images/cars/' + car.image_path.split('/')[-1]) }}";
+        {% endif %}
+        
+        {% if car.image_path2 %}
+            var img2Preview = document.getElementById('image2-preview');
+            img2Preview.classList.remove('hidden');
+            img2Preview.querySelector('img').src = "{{ url_for('static', filename='images/cars/' + car.image_path2.split('/')[-1]) }}";
+        {% endif %}
+        
+        {% if car.image_path3 %}
+            var img3Preview = document.getElementById('image3-preview');
+            img3Preview.classList.remove('hidden');
+            img3Preview.querySelector('img').src = "{{ url_for('static', filename='images/cars/' + car.image_path3.split('/')[-1]) }}";
+        {% endif %}
+        {% endif %}
+        
+        if (listCarForm) {
+            listCarForm.addEventListener('submit', function(e) {
+                // Validate form before submission
+                const name = document.getElementById('name').value.trim();
+                const company = document.getElementById('company').value;
+                const year = document.getElementById('year').value;
+                const price = document.getElementById('price').value;
+                const kms_driven = document.getElementById('kms_driven').value;
+                const fuel_type = document.getElementById('fuel_type').value;
+                const description = document.getElementById('description').value.trim();
+                
+                let isValid = true;
+                
+                // Clear previous error messages
+                const errorMessages = document.querySelectorAll('.error-message');
+                errorMessages.forEach(message => message.remove());
+                
+                // Reset field styling
+                const formFields = document.querySelectorAll('input, select, textarea');
+                formFields.forEach(field => {
+                    if (field.classList.contains('border-red-500')) {
+                        field.classList.remove('border-red-500');
+                    }
+                    if (field.style.boxShadow) {
+                        field.style.boxShadow = '';
+                    }
+                });
+                
+                // Validate required fields
+                if (!name) {
+                    showError('name', 'Please enter car name/model');
+                    isValid = false;
+                }
+                
+                if (!company) {
+                    showError('company', 'Please select a car brand');
+                    isValid = false;
+                }
+                
+                if (!year) {
+                    showError('year', 'Please select a year');
+                    isValid = false;
+                }
+                
+                if (!price) {
+                    showError('price', 'Please enter price');
+                    isValid = false;
+                } else if (isNaN(price) || parseInt(price) <= 0) {
+                    showError('price', 'Please enter a valid price');
+                    isValid = false;
+                }
+                
+                if (!kms_driven) {
+                    showError('kms_driven', 'Please enter kilometers driven');
+                    isValid = false;
+                } else if (isNaN(kms_driven) || parseInt(kms_driven) < 0) {
+                    showError('kms_driven', 'Please enter a valid number for kilometers driven');
+                    isValid = false;
+                }
+                
+                if (!fuel_type) {
+                    showError('fuel_type', 'Please select a fuel type');
+                    isValid = false;
+                }
+                
+                if (!description) {
+                    showError('description', 'Please enter a description');
+                    isValid = false;
+                } else if (description.length < 30) {
+                    showError('description', 'Description should be at least 30 characters long to provide adequate information');
+                    isValid = false;
+                }
+                
+                // Validate contact information
+                const contact_email = document.getElementById('contact_email')?.value.trim();
+                if (contact_email && !isValidEmail(contact_email)) {
+                    showError('contact_email', 'Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                const contact_phone = document.getElementById('contact_phone')?.value.trim();
+                if (contact_phone && !isValidPhone(contact_phone)) {
+                    showError('contact_phone', 'Please enter a valid phone number');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to the first error
+                    const firstError = document.querySelector('.error-message');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        }
+        
+        // Set up image preview functionality
+        function setupImagePreviews() {
+            setupImagePreview('image', 'image-preview');
+            setupImagePreview('image2', 'image2-preview');
+            setupImagePreview('image3', 'image3-preview');
+        }
+        
+        function setupImagePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            if (input && preview) {
+                input.addEventListener('change', function() {
+                    if (input.files && input.files[0]) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const img = preview.querySelector('img') || document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = 'Image preview';
+                            img.className = 'w-full h-32 object-cover rounded';
+                            
+                            if (!preview.contains(img)) {
+                                preview.appendChild(img);
+                            }
+                            
+                            preview.classList.remove('hidden');
+                        };
+                        
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                });
+            }
+        }
+        
+        // Show error message for form field
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message text-red-500 text-sm mt-1';
+            errorDiv.textContent = message;
+            
+            field.parentNode.appendChild(errorDiv);
+            
+            // Highlight the field with error
+            if (field.classList.contains('border-none')) {
+                field.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.5)';
+            } else {
+                field.classList.add('border-red-500');
+            }
+        }
+        
+        // Validate email format
+        function isValidEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+        
+        // Validate phone number format (basic validation)
+        function isValidPhone(phone) {
+            // This allows for international format with country code
+            const re = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
+            return re.test(String(phone));
+        }
+    });
+</script>
+{% endblock %}

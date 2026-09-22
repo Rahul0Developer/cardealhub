@@ -1,0 +1,67 @@
+```gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py~
+*.pyc~
+*.pyo~
+*.pyd~
+*.so
+*.egg-info/
+*.dist-info/
+.Python
+env/
+venv/
+.venv/
+.ENV
+.env
+.env.local
+.env.*
+pyproject.toml.bak
+uv.lock
+
+# Logs
+*.log
+model_training.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+.coverage
+htmlcov/
+.nyc_output/
+coverage/
+.pytest_cache/
+.hypothesis/
+
+# Build and distribution
+build/
+dist/
+*.egg
+*.whl
+pip-wheel-metadata/
+
+# Images directory (from malformed entries)
+"images
+"static/images/cars/Honda
+"static/images/cars/Hyundai
+"static/images/cars/Kia
+"static/images/cars/MG
+"static/images/cars/Mahindra
+"static/images/cars/Maruti
+"static/images/cars/Renault
+"static/images/cars/Tata
+"static/images/cars/Toyota
+```

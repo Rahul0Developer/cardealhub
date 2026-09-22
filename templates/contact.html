@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Contact Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Contact Us</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Have questions or feedback? We're here to help. Reach out to our team using the form below.</p>
+        </div>
+    </section>
+    
+    <!-- Contact Content -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Contact Form -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
+                        <form id="contact-form">
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                                <input type="text" id="name" name="name" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                <input type="text" id="subject" name="subject" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Your Message</label>
+                                <textarea id="message" name="message" rows="5" class="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded border-none" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-primary text-white py-3 rounded-button font-medium">Send Message</button>
+                        </form>
+                        
+                        <div id="contact-success" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mt-4 hidden">
+                            <p>Thank you for your message! We'll get back to you shortly.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Information -->
+                    <div>
+                        <div class="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-8">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                        <i class="ri-map-pin-line text-primary text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Our Office</h3>
+                                        <p class="text-gray-600">123 Main Road<br>Sonepat Fazilpur, Haryana<br>India</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                        <i class="ri-phone-line text-secondary text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Phone Number</h3>
+                                        <p class="text-gray-600">Customer Support: +91 123 456 7890<br>Sales: +91 123 456 7891</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                        <i class="ri-mail-line text-yellow-500 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Email Address</h3>
+                                        <p class="text-gray-600">General Inquiries: info@cardealhub.com<br>Support: support@cardealhub.com</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                        <i class="ri-time-line text-purple-500 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Working Hours</h3>
+                                        <p class="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM<br>Saturday: 10:00 AM - 4:00 PM<br>Sunday: Closed</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Connect With Us</h2>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                                    <i class="ri-facebook-fill"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 bg-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                                    <i class="ri-twitter-fill"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 bg-pink-600 text-white rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
+                                    <i class="ri-instagram-line"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 bg-blue-700 text-white rounded-full flex items-center justify-center hover:bg-blue-800 transition-colors">
+                                    <i class="ri-linkedin-fill"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Map -->
+                <div class="mt-12">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Our Location</h2>
+                    <div class="rounded-lg overflow-hidden shadow-sm" style="height: 384px; position: relative;">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Find quick answers to common questions about Car Deal Hub.</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <button class="faq-toggle flex justify-between items-center w-full text-left">
+                            <h3 class="text-lg font-bold text-gray-900">How accurate is the price prediction?</h3>
+                            <i class="ri-arrow-down-s-line text-gray-500 text-xl"></i>
+                        </button>
+                        <div class="faq-content hidden mt-4">
+                            <p class="text-gray-600">Our price prediction model is based on machine learning algorithms trained on thousands of car listings. It provides estimates with an average accuracy of 85-90% based on the information provided. For the most accurate valuation, we recommend providing complete and accurate information about your car.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <button class="faq-toggle flex justify-between items-center w-full text-left">
+                            <h3 class="text-lg font-bold text-gray-900">How do I list my car for sale?</h3>
+                            <i class="ri-arrow-down-s-line text-gray-500 text-xl"></i>
+                        </button>
+                        <div class="faq-content hidden mt-4">
+                            <p class="text-gray-600">To list your car, you need to create an account or log in if you already have one. Then, navigate to the "List Car" page and fill out the form with details about your car, including make, model, year, mileage, condition, and price. You can also add photos and a description to make your listing more attractive to potential buyers.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <button class="faq-toggle flex justify-between items-center w-full text-left">
+                            <h3 class="text-lg font-bold text-gray-900">Are there any fees for using Car Deal Hub?</h3>
+                            <i class="ri-arrow-down-s-line text-gray-500 text-xl"></i>
+                        </button>
+                        <div class="faq-content hidden mt-4">
+                            <p class="text-gray-600">Basic listing and browsing on Car Deal Hub is completely free. We offer premium features for sellers who want to highlight their listings or get access to advanced market insights, but these are optional and clearly marked with their respective fees.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <button class="faq-toggle flex justify-between items-center w-full text-left">
+                            <h3 class="text-lg font-bold text-gray-900">How does Car Deal Hub ensure safety for buyers and sellers?</h3>
+                            <i class="ri-arrow-down-s-line text-gray-500 text-xl"></i>
+                        </button>
+                        <div class="faq-content hidden mt-4">
+                            <p class="text-gray-600">We implement several safety measures including user verification, secure messaging systems, and reporting tools. We also provide tips and guides for safe transactions. However, we recommend meeting in public places for test drives and inspections, and using secure payment methods for transactions.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <button class="faq-toggle flex justify-between items-center w-full text-left">
+                            <h3 class="text-lg font-bold text-gray-900">Can I edit or remove my listing after posting?</h3>
+                            <i class="ri-arrow-down-s-line text-gray-500 text-xl"></i>
+                        </button>
+                        <div class="faq-content hidden mt-4">
+                            <p class="text-gray-600">Yes, you can edit or remove your listing at any time through your user dashboard. Simply log in to your account, go to "My Listings," and select the listing you want to edit or delete. Changes will be reflected immediately on the marketplace.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- Leaflet Maps (Open Source alternative) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+    #map {
+        width: 100% !important;
+        height: 384px !important;
+        min-height: 384px !important;
+        position: relative !important;
+        z-index: 1 !important;
+        display: block !important;
+    }
+    /* Fix popup styling */
+    .leaflet-popup-content h3.text-primary {
+        color: #ea4335;
+        margin-bottom: 8px;
+    }
+    .leaflet-popup-content p.mt-1 {
+        margin-top: 4px;
+    }
+    .leaflet-popup-content p.mt-2 {
+        margin-top: 8px;
+    }
+    .leaflet-popup-content a.text-primary {
+        color: #ea4335;
+        display: block;
+        margin-top: 8px;
+        text-decoration: none;
+    }
+    .leaflet-popup-content a.text-primary:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // The location of the office (Sonepat Fazilpur coordinates)
+            const officeLocation = [29.0157, 77.0152]; // Sonepat Fazilpur coordinates
+            
+            // Initialize the map
+            const map = L.map('map', {
+                attributionControl: false
+            }).setView(officeLocation, 13);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: false
+            }).addTo(map);
+            
+            // Add a marker for the office location
+            const marker = L.marker(officeLocation).addTo(map);
+            
+            // Add a popup with office details
+            marker.bindPopup(`
+                <div class="p-3">
+                    <h3 class="font-bold text-lg text-primary">Car Deal Hub</h3>
+                    <p class="mt-1">123 Main Road<br>Sonepat Fazilpur, Haryana</p>
+                    <p class="mt-2"><strong>Phone:</strong> +91 123 456 7890</p>
+                    <a href="tel:+911234567890" class="text-primary hover:underline block mt-2">Click to call us</a>
+                </div>
+            `).openPopup();
+            
+            // Add a circle around the marker for visual emphasis
+            const circle = L.circle(officeLocation, {
+                color: '#ea4335',
+                fillColor: '#ea4335',
+                fillOpacity: 0.1,
+                radius: 500
+            }).addTo(map);
+            
+            // Ensure the map is properly sized after initialization
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 100);
+            
+        } catch (error) {
+            console.error("Map error:", error);
+            document.getElementById("map").innerHTML = 
+                '<div class="flex items-center justify-center h-full bg-gray-100 text-gray-500">' +
+                '<div class="text-center"><i class="ri-map-pin-line text-4xl mb-2"></i>' +
+                '<p>Map could not be loaded at this time.</p></div></div>';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle contact form submission
+        const contactForm = document.getElementById('contact-form');
+        const contactSuccess = document.getElementById('contact-success');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Simulate form submission (in a real implementation, this would send data to the server)
+                setTimeout(function() {
+                    contactForm.reset();
+                    contactSuccess.classList.remove('hidden');
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(function() {
+                        contactSuccess.classList.add('hidden');
+                    }, 5000);
+                }, 1000);
+            });
+        }
+        
+        // FAQ toggles
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+        
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                
+                if (!content.classList.contains('hidden')) {
+                    icon.classList.remove('ri-arrow-down-s-line');
+                    icon.classList.add('ri-arrow-up-s-line');
+                } else {
+                    icon.classList.remove('ri-arrow-up-s-line');
+                    icon.classList.add('ri-arrow-down-s-line');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

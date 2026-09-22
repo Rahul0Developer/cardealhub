@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+
+{% block title %}Transaction Management - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Admin Dashboard Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Transaction Management</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Monitor payment activity and manage the sales transactions across the platform.</p>
+        </div>
+    </section>
+    
+    <!-- Admin Nav -->
+    <section class="py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <nav class="flex overflow-x-auto whitespace-nowrap pb-2">
+                <a href="{{ url_for('admin.dashboard') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Dashboard</a>
+                <a href="{{ url_for('admin.listings') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Listings</a>
+                <a href="{{ url_for('admin.transactions') }}" class="px-4 py-2 font-medium text-primary border-b-2 border-primary mr-4">Transactions</a>
+                <a href="{{ url_for('admin.users') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Users</a>
+                <a href="{{ url_for('admin.user_roles') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">User Roles</a>
+                <a href="{{ url_for('admin.reports') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary">Reports</a>
+            </nav>
+        </div>
+    </section>
+    
+    <!-- Transaction Stats -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                <!-- Total Transactions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.total }}</h3>
+                            <p class="text-gray-600">Total</p>
+                        </div>
+                        <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="ri-exchange-dollar-line text-xl text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Successful Transactions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-green-600">{{ stats.success }}</h3>
+                            <p class="text-gray-600">Successful</p>
+                        </div>
+                        <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="ri-check-line text-xl text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pending Transactions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-yellow-600">{{ stats.pending }}</h3>
+                            <p class="text-gray-600">Pending</p>
+                        </div>
+                        <div class="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i class="ri-time-line text-xl text-yellow-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Failed Transactions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-red-600">{{ stats.failed }}</h3>
+                            <p class="text-gray-600">Failed</p>
+                        </div>
+                        <div class="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="ri-close-line text-xl text-red-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Total Revenue -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">₹{{ "{:,}".format(stats.revenue) }}</h3>
+                            <p class="text-gray-600">Revenue</p>
+                        </div>
+                        <div class="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="ri-money-rupee-circle-line text-xl text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Car Type Price Analysis -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Average Transaction Price by Car Type</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Car Type</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Average Price</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Price Comparison</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for type_data in stats.car_types %}
+                                <tr class="border-t border-gray-200">
+                                    <td class="py-3 px-4 text-gray-800">{{ type_data.type }}</td>
+                                    <td class="py-3 px-4 text-gray-800">₹{{ "{:,}".format(type_data.avg_price) }}</td>
+                                    <td class="py-3 px-4">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            {% set max_price = stats.car_types|map(attribute='avg_price')|max %}
+                                            {% set percentage = (type_data.avg_price / max_price * 100) if max_price > 0 else 0 %}
+                                            <div class="bg-primary h-2.5 rounded-full" style="width: {{ percentage }}%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Filters and Export -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 md:mb-0">Transaction History</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="{{ url_for('admin.export_data', data_type='transactions') }}" class="btn-secondary text-sm px-3 py-1.5">
+                            <i class="ri-download-2-line mr-1"></i> Export CSV
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Filters Form -->
+                <form method="get" action="{{ url_for('admin.transactions') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+                            <option value="Success" {% if status_filter == 'Success' %}selected{% endif %}>Successful</option>
+                            <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Failed" {% if status_filter == 'Failed' %}selected{% endif %}>Failed</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Date From</label>
+                        <input type="date" id="date_from" name="date_from" value="{{ date_from }}" class="form-input">
+                    </div>
+                    
+                    <div>
+                        <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">Date To</label>
+                        <input type="date" id="date_to" name="date_to" value="{{ date_to }}" class="form-input">
+                    </div>
+                    
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                        <div class="relative">
+                            <input type="text" id="search" name="search" value="{{ search }}" placeholder="Car name or username" class="form-input pl-10">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="ri-search-line text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-4 flex justify-end">
+                        <button type="submit" class="btn-primary">Apply Filters</button>
+                    </div>
+                </form>
+                
+                <!-- Transactions Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">ID</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Car</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Buyer</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Seller</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Amount</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Date</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Status</th>
+                                <th class="py-3 px-4 text-left font-medium text-gray-600">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                                <tr class="border-t border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4 text-gray-800">{{ transaction.transaction_id }}</td>
+                                    <td class="py-3 px-4">
+                                        {% set car = transaction.car %}
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 flex-shrink-0 mr-3">
+                                                {% if car.image_path %}
+                                                    <img src="{{ url_for('static', filename='images/cars/' + car.image_path) }}" alt="{{ car.name }}" class="h-10 w-10 object-cover rounded-md">
+                                                {% else %}
+                                                    <div class="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
+                                                        <i class="ri-car-line text-gray-400"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <span class="text-gray-800">{{ car.company }} {{ car.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-800">{{ transaction.buyer.username }}</td>
+                                    <td class="py-3 px-4 text-gray-800">{{ transaction.seller.username }}</td>
+                                    <td class="py-3 px-4 text-gray-800">₹{{ "{:,}".format(transaction.amount) }}</td>
+                                    <td class="py-3 px-4 text-gray-600">{{ transaction.timestamp.strftime('%d %b, %Y') }}</td>
+                                    <td class="py-3 px-4">
+                                        {% if transaction.status == 'Success' %}
+                                            <span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-700">Successful</span>
+                                        {% elif transaction.status == 'Pending' %}
+                                            <span class="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-700">Pending</span>
+                                        {% elif transaction.status == 'Failed' %}
+                                            <span class="px-2 py-1 rounded-full text-xs bg-red-100 text-red-700">Failed</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <a href="{{ url_for('admin.transaction_details', transaction_id=transaction.id) }}" class="text-primary hover:underline text-sm">
+                                            <i class="ri-eye-line"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr class="border-t border-gray-200">
+                                    <td colspan="8" class="py-4 px-4 text-center text-gray-500">
+                                        No transactions found matching your criteria.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if pagination.pages > 1 %}
+                    <div class="py-4 flex justify-center">
+                        <nav class="flex items-center">
+                            {% if pagination.has_prev %}
+                                <a href="{{ url_for('admin.transactions', page=pagination.prev_num, status=status_filter, date_from=date_from, date_to=date_to, search=search) }}" class="px-3 py-2 mr-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                    <i class="ri-arrow-left-s-line"></i>
+                                </a>
+                            {% else %}
+                                <span class="px-3 py-2 mr-1 border border-gray-200 rounded-md text-gray-400 cursor-not-allowed">
+                                    <i class="ri-arrow-left-s-line"></i>
+                                </span>
+                            {% endif %}
+                            
+                            {% for page in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                {% if page %}
+                                    {% if page == pagination.page %}
+                                        <span class="px-3 py-2 mx-1 border border-primary bg-primary text-white rounded-md">{{ page }}</span>
+                                    {% else %}
+                                        <a href="{{ url_for('admin.transactions', page=page, status=status_filter, date_from=date_from, date_to=date_to, search=search) }}" class="px-3 py-2 mx-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">{{ page }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="px-3 py-2 mx-1 text-gray-700">…</span>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if pagination.has_next %}
+                                <a href="{{ url_for('admin.transactions', page=pagination.next_num, status=status_filter, date_from=date_from, date_to=date_to, search=search) }}" class="px-3 py-2 ml-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </a>
+                            {% else %}
+                                <span class="px-3 py-2 ml-1 border border-gray-200 rounded-md text-gray-400 cursor-not-allowed">
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </span>
+                            {% endif %}
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

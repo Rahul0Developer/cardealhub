@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Car Deal Hub{% endblock %}
+
+{% block content %}
+    <!-- Admin Dashboard Header -->
+    <section class="bg-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Admin Dashboard</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Welcome back, {{ current_user.username }}! Manage listings, users, and platform metrics.</p>
+        </div>
+    </section>
+    
+    <!-- Admin Nav -->
+    <section class="py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <nav class="flex overflow-x-auto whitespace-nowrap pb-2">
+                <a href="{{ url_for('admin.dashboard') }}" class="px-4 py-2 font-medium text-primary border-b-2 border-primary mr-4">Dashboard</a>
+                <a href="{{ url_for('admin.listings') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Listings</a>
+                <a href="{{ url_for('admin.transactions') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Transactions</a>
+                <a href="{{ url_for('admin.users') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">Users</a>
+                <a href="{{ url_for('admin.user_roles') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary mr-4">User Roles</a>
+                <a href="{{ url_for('admin.reports') }}" class="px-4 py-2 font-medium text-gray-600 hover:text-primary">Reports</a>
+            </nav>
+        </div>
+    </section>
+    
+    <!-- Summary Cards -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Total Users -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.user_count }}</h3>
+                            <p class="text-gray-600">Total Users</p>
+                        </div>
+                        <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="ri-user-line text-xl text-blue-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs text-green-600 flex items-center">
+                        <i class="ri-arrow-up-line mr-1"></i>
+                        <span>{{ stats.user_growth }}% from last month</span>
+                    </div>
+                </div>
+                
+                <!-- Active Listings -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.active_listings }}</h3>
+                            <p class="text-gray-600">Active Listings</p>
+                        </div>
+                        <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="ri-car-line text-xl text-green-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs text-green-600 flex items-center">
+                        <i class="ri-arrow-up-line mr-1"></i>
+                        <span>{{ stats.listing_growth }}% from last month</span>
+                    </div>
+                </div>
+                
+                <!-- Total Transactions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.transaction_count }}</h3>
+                            <p class="text-gray-600">Total Transactions</p>
+                        </div>
+                        <div class="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <i class="ri-exchange-dollar-line text-xl text-indigo-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{{ url_for('admin.transactions') }}" class="text-primary text-xs hover:underline">View all transactions →</a>
+                    </div>
+                </div>
+                
+                <!-- Today's Listings -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.today_listings }}</h3>
+                            <p class="text-gray-600">Today's New Listings</p>
+                        </div>
+                        <div class="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i class="ri-calendar-check-line text-xl text-yellow-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{{ url_for('admin.listings') }}" class="text-primary text-xs hover:underline">View all listings →</a>
+                    </div>
+                </div>
+                
+                <!-- Prediction API Usage -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.prediction_count }}</h3>
+                            <p class="text-gray-600">Prediction API Usage</p>
+                        </div>
+                        <div class="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="ri-line-chart-line text-xl text-purple-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs text-gray-600">
+                        <span>Average predicted price: ₹{{ "{:,}".format(stats.total_revenue) }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Second Row of Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <!-- Pending Approvals -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.pending_count }}</h3>
+                            <p class="text-gray-600">Pending Approvals</p>
+                        </div>
+                        <div class="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i class="ri-time-line text-xl text-yellow-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{{ url_for('admin.listings', status='pending') }}" class="text-primary text-xs hover:underline">Review pending listings →</a>
+                    </div>
+                </div>
+                
+                <!-- Sold Cars -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ stats.sold_count }}</h3>
+                            <p class="text-gray-600">Sold Cars</p>
+                        </div>
+                        <div class="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="ri-shopping-cart-line text-xl text-purple-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs text-green-600 flex items-center">
+                        <i class="ri-arrow-up-line mr-1"></i>
+                        <span>{{ stats.sales_growth }}% from last month</span>
+                    </div>
+                </div>
+                
+                <!-- Total Revenue -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">₹{{ "{:,}".format(stats.total_revenue) }}</h3>
+                            <p class="text-gray-600">Total Revenue</p>
+                        </div>
+                        <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="ri-money-rupee-circle-line text-xl text-green-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{{ url_for('admin.export_data', data_type='transactions') }}" class="text-primary text-xs hover:underline">Export transaction data →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Recent Activity & Pending Approvals -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Recent Activity -->
+                <div>
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-bold text-gray-900">Recent Activity</h3>
+                        </div>
+                        <ul class="divide-y divide-gray-200">
+                            {% for activity in recent_activities %}
+                                <li class="p-6">
+                                    <div class="flex items-start">
+                                        <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center mr-4 flex-shrink-0">
+                                            {% if activity.type == 'user' %}
+                                                <i class="ri-user-line text-blue-600"></i>
+                                            {% elif activity.type == 'car' %}
+                                                <i class="ri-car-line text-green-600"></i>
+                                            {% elif activity.type == 'like' %}
+                                                <i class="ri-heart-line text-red-600"></i>
+                                            {% elif activity.type == 'prediction' %}
+                                                <i class="ri-line-chart-line text-purple-600"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-900">{{ activity.message|safe }}</p>
+                                            <p class="text-xs text-gray-500 mt-1">{{ activity.time }}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="p-4 border-t border-gray-200 text-center">
+                            <a href="{{ url_for('admin.reports') }}" class="text-primary hover:underline text-sm">View All Activity</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pending Approvals -->
+                <div>
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-bold text-gray-900">Pending Approvals</h3>
+                        </div>
+                        {% if pending_listings %}
+                            <ul class="divide-y divide-gray-200">
+                                {% for car in pending_listings %}
+                                    <li class="p-6">
+                                        <div class="flex items-center">
+                                            <div class="h-16 w-16 bg-gray-200 rounded-md flex-shrink-0 mr-4">
+                                                {% if car.image_path %}
+                                                    <img src="{{ url_for('static', filename='images/cars/' + car.image_path) }}" alt="{{ car.name }}" class="h-16 w-16 object-cover rounded-md">
+                                                {% else %}
+                                                    <div class="h-16 w-16 flex items-center justify-center">
+                                                        <i class="ri-car-line text-gray-400"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="flex-1">
+                                                <h4 class="text-gray-900 font-medium">{{ car.name }}</h4>
+                                                <div class="text-sm text-gray-500">{{ car.company }}, {{ car.year }}</div>
+                                                <div class="text-sm text-gray-900 mt-1">₹{{ "{:,}".format(car.price) }}</div>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <form action="{{ url_for('admin.update_listing_status', car_id=car.id) }}" method="post">
+                                                    <button type="submit" name="action" value="approve" class="px-3 py-1 bg-green-600 text-white rounded-full text-xs font-medium hover:bg-green-700 transition-colors">Approve</button>
+                                                </form>
+                                                <form action="{{ url_for('admin.update_listing_status', car_id=car.id) }}" method="post">
+                                                    <button type="submit" name="action" value="reject" class="px-3 py-1 bg-red-600 text-white rounded-full text-xs font-medium hover:bg-red-700 transition-colors">Reject</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="p-6 text-center">
+                                <p class="text-gray-500">No pending approvals at the moment.</p>
+                            </div>
+                        {% endif %}
+                        <div class="p-4 border-t border-gray-200 text-center">
+                            <a href="{{ url_for('admin.listings', status='pending') }}" class="text-primary hover:underline text-sm">View All Pending Listings</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Quick Stats -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Stats</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Popular Brands -->
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-3">Popular Brands</h4>
+                        <div class="space-y-2">
+                            {% for brand in top_brands %}
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-600 w-24">{{ brand.name }}</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-blue-500 rounded-full" style="width: {{ brand.percentage }}%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-2">{{ brand.count }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Popular Fuel Types -->
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-3">Fuel Types</h4>
+                        <div class="space-y-2">
+                            {% for fuel in fuel_types %}
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-600 w-24">{{ fuel.name }}</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: {{ fuel.percentage }}%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-2">{{ fuel.count }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Price Ranges -->
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-3">Price Ranges</h4>
+                        <div class="space-y-2">
+                            {% for range in price_ranges %}
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-600 w-24">{{ range.name }}</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-purple-500 rounded-full" style="width: {{ range.percentage }}%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-2">{{ range.count }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

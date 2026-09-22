@@ -1,0 +1,391 @@
+{% extends 'base.html' %}
+
+{% block title %}Car Deal Hub - Car Selling Tips{% endblock %}
+
+{% block content %}
+    <!-- Header -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Car Selling Tips</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Maximize your sale price and find the right buyer for your vehicle.</p>
+        </div>
+    </section>
+    
+    <!-- Price Estimator -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">What's Your Car Worth?</h2>
+                <p class="text-gray-600 mb-8 text-center">Get a quick estimate of your car's current market value based on key factors.</p>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="make" class="block text-gray-700 mb-2">Make</label>
+                            <select id="make" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="">Select Make</option>
+                                <option value="maruti">Maruti</option>
+                                <option value="hyundai">Hyundai</option>
+                                <option value="tata">Tata</option>
+                                <option value="mahindra">Mahindra</option>
+                                <option value="honda">Honda</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="kia">Kia</option>
+                                <option value="ford">Ford</option>
+                                <option value="volkswagen">Volkswagen</option>
+                                <option value="renault">Renault</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="model" class="block text-gray-700 mb-2">Model</label>
+                            <select id="model" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="">Select Model</option>
+                                <!-- Models will be populated based on selected make -->
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="year" class="block text-gray-700 mb-2">Year</label>
+                            <select id="year" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="">Select Year</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="kms" class="block text-gray-700 mb-2">Kilometers Driven</label>
+                            <input type="number" id="kms" placeholder="e.g., 45000" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        
+                        <div>
+                            <label for="fuel-type" class="block text-gray-700 mb-2">Fuel Type</label>
+                            <select id="fuel-type" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="">Select Fuel Type</option>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="cng">CNG</option>
+                                <option value="electric">Electric</option>
+                                <option value="hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="condition" class="block text-gray-700 mb-2">Condition</label>
+                            <select id="condition" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="">Select Condition</option>
+                                <option value="excellent">Excellent</option>
+                                <option value="good">Good</option>
+                                <option value="fair">Fair</option>
+                                <option value="poor">Poor</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="estimate-price" class="mt-6 bg-primary text-white py-2 px-6 rounded-lg hover:bg-primary-dark transition-colors w-full">Estimate Price</button>
+                    
+                    <div id="price-estimate-result" class="mt-6 p-4 bg-gray-50 rounded-lg hidden">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Estimated Price Range</h3>
+                        <div class="text-2xl font-bold text-primary mb-2" id="price-range">₹7,50,000 - ₹8,25,000</div>
+                        <p class="text-gray-600 text-sm">
+                            This is an estimate based on current market trends. Actual selling price may vary based on additional factors such as service history, additional features, and local demand.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Best Practices Accordion -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Best Practices for Selling Your Car</h2>
+                
+                <div class="space-y-4">
+                    <!-- Accordion Item 1 -->
+                    <div class="border rounded-lg overflow-hidden accordion-item">
+                        <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none accordion-header">
+                            <span class="text-lg font-medium text-gray-900">Prepare Your Car for Sale</span>
+                            <i class="ri-arrow-down-s-line text-gray-500 accordion-icon transition-transform"></i>
+                        </button>
+                        <div class="p-4 border-t bg-white hidden accordion-content">
+                            <ul class="space-y-2 text-gray-700 list-disc pl-5">
+                                <li>Thoroughly clean both the exterior and interior of your car</li>
+                                <li>Fix minor issues such as scratches, dents, or broken lights</li>
+                                <li>Consider a professional detailing service for better presentation</li>
+                                <li>Replace worn wiper blades, floor mats, and other visible worn items</li>
+                                <li>Ensure all maintenance is up to date (oil change, tire rotation, etc.)</li>
+                                <li>Gather service records and maintenance history documents</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Accordion Item 2 -->
+                    <div class="border rounded-lg overflow-hidden accordion-item">
+                        <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none accordion-header">
+                            <span class="text-lg font-medium text-gray-900">Take Great Photos</span>
+                            <i class="ri-arrow-down-s-line text-gray-500 accordion-icon transition-transform"></i>
+                        </button>
+                        <div class="p-4 border-t bg-white hidden accordion-content">
+                            <p class="mb-3 text-gray-700">Quality photos dramatically increase buyer interest. Follow these tips:</p>
+                            <ul class="space-y-2 text-gray-700 list-disc pl-5">
+                                <li>Photograph your car in good lighting, preferably during the "golden hour" (early morning or late afternoon)</li>
+                                <li>Choose a clean, uncluttered background</li>
+                                <li>Take photos from multiple angles (front, rear, sides, 3/4 views)</li>
+                                <li>Include interior shots (dashboard, seats, trunk space)</li>
+                                <li>Highlight special features (sunroof, navigation system, etc.)</li>
+                                <li>Document any damage honestly to build trust with potential buyers</li>
+                                <li>Aim for 10-15 high-quality images</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Accordion Item 3 -->
+                    <div class="border rounded-lg overflow-hidden accordion-item">
+                        <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none accordion-header">
+                            <span class="text-lg font-medium text-gray-900">Write an Effective Listing</span>
+                            <i class="ri-arrow-down-s-line text-gray-500 accordion-icon transition-transform"></i>
+                        </button>
+                        <div class="p-4 border-t bg-white hidden accordion-content">
+                            <p class="mb-3 text-gray-700">Your ad description should be honest, detailed, and engaging:</p>
+                            <ul class="space-y-2 text-gray-700 list-disc pl-5">
+                                <li>Start with a compelling headline that includes year, make, model, and a standout feature</li>
+                                <li>List all essential specifications (mileage, fuel type, transmission, etc.)</li>
+                                <li>Mention recent maintenance, upgrades, or replacements</li>
+                                <li>Be honest about the condition and any issues</li>
+                                <li>Explain your reason for selling (builds trust)</li>
+                                <li>Include details about the ownership history</li>
+                                <li>Specify whether the price is negotiable</li>
+                                <li>Provide contact information and preferred contact method</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Accordion Item 4 -->
+                    <div class="border rounded-lg overflow-hidden accordion-item">
+                        <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none accordion-header">
+                            <span class="text-lg font-medium text-gray-900">Handling Buyer Inquiries</span>
+                            <i class="ri-arrow-down-s-line text-gray-500 accordion-icon transition-transform"></i>
+                        </button>
+                        <div class="p-4 border-t bg-white hidden accordion-content">
+                            <ul class="space-y-2 text-gray-700 list-disc pl-5">
+                                <li>Respond promptly to all inquiries</li>
+                                <li>Be prepared to answer detailed questions about the vehicle</li>
+                                <li>Screen potential buyers before arranging meetings</li>
+                                <li>Meet in public places for test drives and bring a friend if possible</li>
+                                <li>Allow potential buyers to inspect the car thoroughly</li>
+                                <li>Have all your paperwork ready to show (service records, registration, etc.)</li>
+                                <li>Be willing to negotiate, but know your bottom line</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Accordion Item 5 -->
+                    <div class="border rounded-lg overflow-hidden accordion-item">
+                        <button class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 focus:outline-none accordion-header">
+                            <span class="text-lg font-medium text-gray-900">Finalizing the Sale</span>
+                            <i class="ri-arrow-down-s-line text-gray-500 accordion-icon transition-transform"></i>
+                        </button>
+                        <div class="p-4 border-t bg-white hidden accordion-content">
+                            <p class="mb-3 text-gray-700">Once you've found a buyer, complete these steps to finalize the sale:</p>
+                            <ul class="space-y-2 text-gray-700 list-disc pl-5">
+                                <li>Agree on the final price in writing</li>
+                                <li>Accept secure payment methods (avoid personal checks)</li>
+                                <li>Complete a bill of sale with buyer details, VIN, agreed price, and signatures</li>
+                                <li>Transfer the title according to local regulations</li>
+                                <li>Remove your license plates (if required in your region)</li>
+                                <li>Provide all keys, manuals, and maintenance records</li>
+                                <li>Cancel your insurance policy after the sale is complete</li>
+                                <li>Notify your local transport authority of the ownership change</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Photo Tips -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Photo Guide: Capture Your Car's Best Angles</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <img src="{{ url_for('static', filename='images/cars/toyota_default.jpg') }}" alt="Front 3/4 view" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Front 3/4 View</h3>
+                            <p class="text-gray-600">The most flattering angle that shows both the front and side profile of your car.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <img src="{{ url_for('static', filename='images/cars/honda_default.jpg') }}" alt="Interior view" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Interior Dashboard</h3>
+                            <p class="text-gray-600">Showcase the dashboard, steering wheel, and technology features.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <img src="{{ url_for('static', filename='images/cars/hyundai_default.jpg') }}" alt="Rear view" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Rear View</h3>
+                            <p class="text-gray-600">Capture the back of your vehicle to show its full profile and design.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="py-12 bg-primary text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold mb-4">Ready to Sell Your Car?</h2>
+            <p class="mb-6 max-w-2xl mx-auto">Create your listing on Car Deal Hub today and connect with thousands of potential buyers in your area.</p>
+            <a href="{{ url_for('list_car') }}" class="inline-block bg-white text-primary font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">List Your Car Now</a>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Car Make/Model Relationship
+        const makeSelect = document.getElementById('make');
+        const modelSelect = document.getElementById('model');
+        
+        // Define models for each make
+        const carModels = {
+            maruti: ['Swift', 'Baleno', 'Dzire', 'Brezza', 'Alto', 'Wagon R', 'Ertiga', 'XL6', 'Ciaz', 'S-Cross'],
+            hyundai: ['i10', 'i20', 'Verna', 'Creta', 'Venue', 'Aura', 'Tucson', 'Alcazar', 'Kona', 'Elantra'],
+            tata: ['Tiago', 'Tigor', 'Nexon', 'Altroz', 'Harrier', 'Safari', 'Punch', 'Hexa', 'Bolt', 'Zest'],
+            mahindra: ['XUV300', 'XUV500', 'XUV700', 'Thar', 'Scorpio', 'Bolero', 'Marazzo', 'KUV100', 'Alturas G4', 'TUV300'],
+            honda: ['City', 'Amaze', 'Jazz', 'WR-V', 'Civic', 'CR-V', 'Accord', 'Brio', 'BR-V', 'Mobilio'],
+            toyota: ['Innova', 'Fortuner', 'Glanza', 'Urban Cruiser', 'Camry', 'Vellfire', 'Yaris', 'Etios', 'Corolla', 'Land Cruiser'],
+            kia: ['Sonet', 'Seltos', 'Carnival', 'EV6', 'Carens'],
+            ford: ['EcoSport', 'Figo', 'Aspire', 'Freestyle', 'Endeavour', 'Mustang'],
+            volkswagen: ['Polo', 'Vento', 'Taigun', 'T-Roc', 'Tiguan', 'Passat', 'Jetta'],
+            renault: ['Kwid', 'Triber', 'Kiger', 'Duster', 'Lodgy']
+        };
+        
+        // Update models when make changes
+        makeSelect.addEventListener('change', function() {
+            const selectedMake = this.value;
+            
+            // Clear the models dropdown
+            modelSelect.innerHTML = '<option value="">Select Model</option>';
+            
+            // If a make is selected, populate models
+            if (selectedMake && carModels[selectedMake]) {
+                carModels[selectedMake].forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.toLowerCase().replace(' ', '-');
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+            }
+        });
+        
+        // Price estimator functionality
+        const estimateButton = document.getElementById('estimate-price');
+        const resultDiv = document.getElementById('price-estimate-result');
+        
+        estimateButton.addEventListener('click', function() {
+            const make = document.getElementById('make').value;
+            const model = document.getElementById('model').value;
+            const year = document.getElementById('year').value;
+            const kms = document.getElementById('kms').value;
+            const fuelType = document.getElementById('fuel-type').value;
+            const condition = document.getElementById('condition').value;
+            
+            // Basic validation
+            if (!make || !model || !year || !kms || !fuelType || !condition) {
+                alert('Please fill in all fields to get an accurate estimate.');
+                return;
+            }
+            
+            // In a real application, this would call an API with machine learning model
+            // Here we'll use a simplified calculation for demonstration
+            
+            // Base values for different brands (in a real app this would be much more sophisticated)
+            const baseValues = {
+                maruti: 500000,
+                hyundai: 600000,
+                tata: 550000,
+                mahindra: 700000,
+                honda: 650000,
+                toyota: 800000,
+                kia: 750000,
+                ford: 600000,
+                volkswagen: 650000,
+                renault: 500000
+            };
+            
+            // Get base value for selected make
+            let baseValue = baseValues[make] || 600000;
+            
+            // Adjust for year (newer cars are worth more)
+            const currentYear = new Date().getFullYear();
+            const ageDiscount = (currentYear - parseInt(year)) * 0.08; // 8% depreciation per year
+            baseValue = baseValue * (1 - ageDiscount);
+            
+            // Adjust for kilometers (higher km = lower value)
+            const kmFactor = 1 - (parseInt(kms) / 200000); // Max reduction at 200,000 km
+            baseValue = baseValue * Math.max(kmFactor, 0.5); // Minimum 50% of value regardless of km
+            
+            // Adjust for condition
+            const conditionFactors = {
+                excellent: 1.1,
+                good: 1.0,
+                fair: 0.9,
+                poor: 0.75
+            };
+            baseValue = baseValue * (conditionFactors[condition] || 1.0);
+            
+            // Create a price range (±5%)
+            const lowerBound = Math.round(baseValue * 0.95);
+            const upperBound = Math.round(baseValue * 1.05);
+            
+            // Display the result
+            document.getElementById('price-range').textContent = 
+                '₹' + lowerBound.toLocaleString('en-IN') + ' - ₹' + upperBound.toLocaleString('en-IN');
+            
+            resultDiv.classList.remove('hidden');
+        });
+        
+        // Accordion functionality
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('.accordion-icon');
+                
+                // Toggle content visibility
+                content.classList.toggle('hidden');
+                
+                // Rotate icon
+                if (content.classList.contains('hidden')) {
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
