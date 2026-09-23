@@ -17,12 +17,12 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def train_models(df, optimize=True):
-    """Train multiple car price prediction models using the provided dataset with optimization
+def train_models(df, optimize=False):
+    """Train multiple car price prediction models using the provided dataset
     
     Args:
         df: Pandas DataFrame with car data
-        optimize: Boolean flag to enable hyperparameter optimization (default: True)
+        optimize: Boolean flag to enable hyperparameter optimization (default: False)
     
     Returns:
         Dictionary of trained models
@@ -40,7 +40,22 @@ def train_models(df, optimize=True):
     combined_model_path = os.path.join(models_dir, 'car_price_models.pkl')
     metrics_path = os.path.join(models_dir, 'model_metrics.pkl')
     
-    # Prepare data for training
+    # Always try to load existing models first
+    if os.path.exists(combined_model_path):
+        try:
+            with open(combined_model_path, 'rb') as f:
+                models = pickle.load(f)
+            logger.info(f"Loaded existing combined models with {len(models)} models")
+            
+            # Return early if all required models were loaded successfully
+            required_models = ['linear', 'random_forest', 'xgboost', 'gradient_boosting', 'decision_tree']
+            if all(model in models for model in required_models):
+                return models
+            
+        except Exception as e:
+            logger.error(f"Error loading combined models: {e}")
+    
+    # Prepare data for training (only if we need to train)
     # Remove any rows with LPG as fuel_type
     df = df[df['fuel_type'] != 'LPG'].copy()
     
@@ -81,168 +96,68 @@ def train_models(df, optimize=True):
         remainder='drop'
     )
     
-    # Force retraining if optimize flag is True
-    force_retrain = optimize
+    logger.info("Starting model training..." if not optimize else "Starting model training with optimization...")
     
-    if not force_retrain and os.path.exists(combined_model_path):
-        try:
-            with open(combined_model_path, 'rb') as f:
-                models = pickle.load(f)
-            logger.info(f"Loaded existing combined models with {len(models)} models")
-            
-            # Return early if all required models were loaded successfully and not optimizing
-            required_models = ['linear', 'random_forest', 'xgboost', 'gradient_boosting', 'decision_tree']
-            if all(model in models for model in required_models):
-                return models
-            
-        except Exception as e:
-            logger.error(f"Error loading combined models: {e}")
-    
-    logger.info("Starting model training with optimization..." if optimize else "Starting model training...")
-    
-    # Create and train model pipelines with optimization
+    # Create and train model pipelines
     
     # 1. Ridge Regression (better than Linear Regression for multicollinearity)
-    if 'linear' not in models or force_retrain:
+    if 'linear' not in models:
         logger.info("Training Ridge Regression model...")
-        alpha = 1.0
-        if optimize:
-            param_grid = {'regressor__alpha': [0.01, 0.1, 1.0, 10.0, 100.0]}
-            ridge_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', Ridge())
-            ])
-            grid_search = GridSearchCV(ridge_model, param_grid, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
-            grid_search.fit(X_train, y_train)
-            ridge_model = grid_search.best_estimator_
-            alpha = grid_search.best_params_['regressor__alpha']
-            logger.info(f"Best Ridge alpha: {alpha}")
-        else:
-            ridge_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', Ridge(alpha=1.0))
-            ])
-            ridge_model.fit(X_train, y_train)
+        ridge_model = Pipeline(steps=[
+            ('preprocessor', preprocessor),
+            ('regressor', Ridge(alpha=1.0))
+        ])
+        ridge_model.fit(X_train, y_train)
         
         models['linear'] = ridge_model
         logger.info("Trained Ridge Regression model")
     
-    # 2. Random Forest with optimization
-    if 'random_forest' not in models or force_retrain:
+    # 2. Random Forest
+    if 'random_forest' not in models:
         logger.info("Training Random Forest model...")
-        if optimize:
-            param_dist = {
-                'regressor__n_estimators': [100, 200, 300],
-                'regressor__max_depth': [10, 20, 30, None],
-                'regressor__min_samples_split': [2, 5, 10],
-                'regressor__min_samples_leaf': [1, 2, 4]
-            }
-            rf_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', RandomForestRegressor(random_state=42, n_jobs=-1))
-            ])
-            random_search = RandomizedSearchCV(rf_model, param_distributions=param_dist, 
-                                              n_iter=20, cv=5, scoring='neg_mean_absolute_error', 
-                                              n_jobs=-1, random_state=42)
-            random_search.fit(X_train, y_train)
-            rf_model = random_search.best_estimator_
-            logger.info(f"Best RF params: {random_search.best_params_}")
-        else:
-            rf_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', RandomForestRegressor(n_estimators=200, max_depth=20, random_state=42, n_jobs=-1))
-            ])
-            rf_model.fit(X_train, y_train)
+        rf_model = Pipeline(steps=[
+            ('preprocessor', preprocessor),
+            ('regressor', RandomForestRegressor(n_estimators=200, max_depth=20, random_state=42, n_jobs=-1))
+        ])
+        rf_model.fit(X_train, y_train)
         
         models['random_forest'] = rf_model
         logger.info("Trained Random Forest model")
     
-    # 3. XGBoost with optimization
-    if 'xgboost' not in models or force_retrain:
+    # 3. XGBoost
+    if 'xgboost' not in models:
         logger.info("Training XGBoost model...")
-        if optimize:
-            param_dist = {
-                'regressor__n_estimators': [100, 200, 300, 500],
-                'regressor__max_depth': [3, 5, 7, 9],
-                'regressor__learning_rate': [0.01, 0.05, 0.1, 0.2],
-                'regressor__subsample': [0.7, 0.8, 0.9, 1.0],
-                'regressor__colsample_bytree': [0.7, 0.8, 0.9, 1.0]
-            }
-            xgb_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', xgb.XGBRegressor(objective='reg:squarederror', random_state=42, n_jobs=-1))
-            ])
-            random_search = RandomizedSearchCV(xgb_model, param_distributions=param_dist, 
-                                              n_iter=30, cv=5, scoring='neg_mean_absolute_error', 
-                                              n_jobs=-1, random_state=42)
-            random_search.fit(X_train, y_train)
-            xgb_model = random_search.best_estimator_
-            logger.info(f"Best XGB params: {random_search.best_params_}")
-        else:
-            xgb_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', xgb.XGBRegressor(objective='reg:squarederror', n_estimators=300, 
-                                              max_depth=5, learning_rate=0.05, random_state=42, n_jobs=-1))
-            ])
-            xgb_model.fit(X_train, y_train)
+        xgb_model = Pipeline(steps=[
+            ('preprocessor', preprocessor),
+            ('regressor', xgb.XGBRegressor(objective='reg:squarederror', n_estimators=300, 
+                                          max_depth=5, learning_rate=0.05, random_state=42, n_jobs=-1))
+        ])
+        xgb_model.fit(X_train, y_train)
         
         models['xgboost'] = xgb_model
         logger.info("Trained XGBoost model")
     
-    # 4. Gradient Boosting Regression with optimization
-    if 'gradient_boosting' not in models or force_retrain:
+    # 4. Gradient Boosting Regression
+    if 'gradient_boosting' not in models:
         logger.info("Training Gradient Boosting model...")
-        if optimize:
-            param_dist = {
-                'regressor__n_estimators': [100, 200, 300],
-                'regressor__max_depth': [3, 5, 7],
-                'regressor__learning_rate': [0.01, 0.05, 0.1, 0.2],
-                'regressor__subsample': [0.7, 0.8, 0.9, 1.0]
-            }
-            gb_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', GradientBoostingRegressor(random_state=42))
-            ])
-            random_search = RandomizedSearchCV(gb_model, param_distributions=param_dist, 
-                                              n_iter=20, cv=5, scoring='neg_mean_absolute_error', 
-                                              n_jobs=-1, random_state=42)
-            random_search.fit(X_train, y_train)
-            gb_model = random_search.best_estimator_
-            logger.info(f"Best GB params: {random_search.best_params_}")
-        else:
-            gb_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', GradientBoostingRegressor(n_estimators=200, max_depth=5, 
-                                                       learning_rate=0.05, random_state=42))
-            ])
-            gb_model.fit(X_train, y_train)
+        gb_model = Pipeline(steps=[
+            ('preprocessor', preprocessor),
+            ('regressor', GradientBoostingRegressor(n_estimators=200, max_depth=5, 
+                                                   learning_rate=0.05, random_state=42))
+        ])
+        gb_model.fit(X_train, y_train)
         
         models['gradient_boosting'] = gb_model
         logger.info("Trained Gradient Boosting model")
     
     # 5. Decision Tree Regression
-    if 'decision_tree' not in models or force_retrain:
+    if 'decision_tree' not in models:
         logger.info("Training Decision Tree model...")
-        if optimize:
-            param_grid = {
-                'regressor__max_depth': [5, 10, 15, 20, None],
-                'regressor__min_samples_split': [2, 5, 10],
-                'regressor__min_samples_leaf': [1, 2, 4]
-            }
-            dt_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', DecisionTreeRegressor(random_state=42))
-            ])
-            grid_search = GridSearchCV(dt_model, param_grid, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
-            grid_search.fit(X_train, y_train)
-            dt_model = grid_search.best_estimator_
-            logger.info(f"Best DT params: {grid_search.best_params_}")
-        else:
-            dt_model = Pipeline(steps=[
-                ('preprocessor', preprocessor),
-                ('regressor', DecisionTreeRegressor(max_depth=10, random_state=42))
-            ])
-            dt_model.fit(X_train, y_train)
+        dt_model = Pipeline(steps=[
+            ('preprocessor', preprocessor),
+            ('regressor', DecisionTreeRegressor(max_depth=10, random_state=42))
+        ])
+        dt_model.fit(X_train, y_train)
         
         models['decision_tree'] = dt_model
         logger.info("Trained Decision Tree model")

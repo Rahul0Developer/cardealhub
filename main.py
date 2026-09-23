@@ -33,8 +33,8 @@ else:
 df = df[df['fuel_type'] != 'LPG']
 logger.info(f"Loaded data with {len(df)} rows after filtering out LPG")
 
-# Train models
-models = train_models(df)
+# Train models (with optimize=False to load existing models if available)
+models = train_models(df, optimize=False)
 logger.info(f"Trained {len(models)} models")
 
 # Register routes
